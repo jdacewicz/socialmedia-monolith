@@ -2,6 +2,7 @@ package pl.jdacewicz.socialmediaserver.post;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,11 +19,13 @@ class PostService {
         throw new UnsupportedOperationException();
     }
 
+    @Transactional
     public boolean changePostVisibility(long id, boolean visible) {
-        throw new UnsupportedOperationException();
+        var updatedRecordsCount = postRepository.setVisibleById(id, visible);
+        return updatedRecordsCount > 0;
     }
 
-    public boolean deletePost(long id) {
-        throw new UnsupportedOperationException();
+    public void deletePost(long id) {
+        postRepository.deleteById(id);
     }
 }

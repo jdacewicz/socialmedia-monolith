@@ -1,0 +1,14 @@
+spring:
+  config:
+    import: file:env.properties
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql:${db_url}
+    username: ${db_user}
+    password: ${db_password}
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+server:
+  port: 0

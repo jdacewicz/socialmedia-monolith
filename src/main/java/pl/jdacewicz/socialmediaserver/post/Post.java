@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 @Setter
 class Post {
 
+    private final static String POSTS_STORE_DIRECTORY_URL = "";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -23,4 +25,8 @@ class Post {
     private String content;
 
     private boolean visible = true;
+
+    public static String getDirectoryUrl(long id) {
+        return POSTS_STORE_DIRECTORY_URL + "/" + id;
+    }
 }

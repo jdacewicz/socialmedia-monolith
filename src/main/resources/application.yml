@@ -12,3 +12,8 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 server:
   port: 0
+
+message:
+  post:
+    not-found: Could not find post with given id
+    not-found-visible: Could not find visible post with given id

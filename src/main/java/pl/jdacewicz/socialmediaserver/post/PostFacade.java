@@ -26,7 +26,8 @@ public class PostFacade {
     }
 
     public PostDto createPost(PostRequest request, MultipartFile image) throws IOException {
-        var createdPost = postService.createPost(request, image);
+        var post = postMapper.toPost(request, image);
+        var createdPost = postService.createPost(post, image);
         return postMapper.toDto(createdPost);
     }
 

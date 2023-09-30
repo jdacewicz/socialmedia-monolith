@@ -5,7 +5,6 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import pl.jdacewicz.socialmediaserver.post.dto.PostRequest;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +14,6 @@ import java.io.IOException;
 class PostService {
 
     private final PostRepository postRepository;
-    private final PostMapper postMapper;
 
     Post getPostById(long id) {
         return postRepository.findById(id)
@@ -27,8 +25,7 @@ class PostService {
                 .orElseThrow(() -> new PostNotFoundException(""));
     }
 
-    Post createPost(PostRequest request, MultipartFile image) throws IOException {
-        var post = postMapper.toPost(request, image);
+    Post createPost(Post post, MultipartFile image) throws IOException {
         var createdPost = postRepository.save(post);
         var directory = new File(post.getImageUrl());
 

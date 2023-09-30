@@ -26,12 +26,12 @@ public class PostService {
                 .orElseThrow(() -> new PostNotFoundException(""));
     }
 
-    public Post createPost(PostRequest request, MultipartFile file) throws IOException {
-        var post = postMapper.toPost(request, file);
+    public Post createPost(PostRequest request, MultipartFile image) throws IOException {
+        var post = postMapper.toPost(request, image);
         var createdPost = postRepository.save(post);
         var directory = new File(post.getImageUrl());
 
-        FileUtils.copyInputStreamToFile(file.getInputStream(), directory);
+        FileUtils.copyInputStreamToFile(image.getInputStream(), directory);
         return createdPost;
     }
 

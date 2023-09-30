@@ -2,13 +2,14 @@ package pl.jdacewicz.socialmediaserver.post.infrastructure.web;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import pl.jdacewicz.socialmediaserver.post.PostMapper;
+import pl.jdacewicz.socialmediaserver.post.PostRequest;
 import pl.jdacewicz.socialmediaserver.post.PostService;
 import pl.jdacewicz.socialmediaserver.post.dto.PostDto;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping(value = "/api/posts",
@@ -31,8 +32,11 @@ public class PostController {
         return postMapper.toDto(post);
     }
 
-    public PostDto createPost() {
-        throw new UnsupportedOperationException();
+    @PostMapping
+    public PostDto createPost(@RequestPart PostRequest request,
+                              @RequestPart MultipartFile image) throws IOException {
+        var createdPost = postService.createPost(request, image);
+        return postMapper.toDto(createdPost);
     }
 
     public boolean changePostVisibility() {

@@ -39,11 +39,14 @@ public class PostController {
         return postMapper.toDto(createdPost);
     }
 
-    public boolean changePostVisibility() {
-        throw new UnsupportedOperationException();
+    @PutMapping("/{id}")
+    public boolean changePostVisibility(@PathVariable long id,
+                                        @RequestParam boolean visible) {
+        return postService.changePostVisibility(id, visible);
     }
 
-    public void deletePost() {
-        throw new UnsupportedOperationException();
+    @DeleteMapping("/{id}")
+    public void deletePost(@PathVariable long id) throws IOException {
+        postService.deletePost(id);
     }
 }

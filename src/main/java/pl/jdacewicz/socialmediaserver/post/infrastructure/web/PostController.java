@@ -4,10 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import pl.jdacewicz.socialmediaserver.post.PostMapper;
-import pl.jdacewicz.socialmediaserver.post.dto.PostRequest;
-import pl.jdacewicz.socialmediaserver.post.PostService;
+import pl.jdacewicz.socialmediaserver.post.PostFacade;
 import pl.jdacewicz.socialmediaserver.post.dto.PostDto;
+import pl.jdacewicz.socialmediaserver.post.dto.PostRequest;
 
 import java.io.IOException;
 
@@ -17,36 +16,32 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class PostController {
 
-    private final PostService postService;
-    private final PostMapper postMapper;
+    private final PostFacade postFacade;
 
     @GetMapping("/{id}")
     public PostDto getVisiblePost(@PathVariable long id) {
-        var post = postService.getPostByIdAndVisible(id, true);
-        return postMapper.toDto(post);
+        return postFacade.getVisiblePost(id);
     }
 
     @GetMapping("/peek/{id}")
     public PostDto getPostById(@PathVariable long id) {
-        var post = postService.getPostById(id);
-        return postMapper.toDto(post);
+        return postFacade.getPostById(id);
     }
 
     @PostMapping
     public PostDto createPost(@RequestPart PostRequest request,
                               @RequestPart MultipartFile image) throws IOException {
-        var createdPost = postService.createPost(request, image);
-        return postMapper.toDto(createdPost);
+        return postFacade.createPost(request, image);
     }
 
     @PutMapping("/{id}")
     public boolean changePostVisibility(@PathVariable long id,
                                         @RequestParam boolean visible) {
-        return postService.changePostVisibility(id, visible);
+        return postFacade.changePostVisibility(id, visible);
     }
 
     @DeleteMapping("/{id}")
     public void deletePost(@PathVariable long id) throws IOException {
-        postService.deletePost(id);
+        postFacade.deletePost(id);
     }
 }

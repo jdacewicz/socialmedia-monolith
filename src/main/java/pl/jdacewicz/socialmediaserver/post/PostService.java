@@ -12,22 +12,22 @@ import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
-public class PostService {
+class PostService {
 
     private final PostRepository postRepository;
     private final PostMapper postMapper;
 
-    public Post getPostById(long id) {
+    Post getPostById(long id) {
         return postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException(""));
     }
 
-    public Post getPostByIdAndVisible(long id, boolean visible) {
+    Post getPostByIdAndVisible(long id, boolean visible) {
         return postRepository.findByIdAndVisible(id, visible)
                 .orElseThrow(() -> new PostNotFoundException(""));
     }
 
-    public Post createPost(PostRequest request, MultipartFile image) throws IOException {
+    Post createPost(PostRequest request, MultipartFile image) throws IOException {
         var post = postMapper.toPost(request, image);
         var createdPost = postRepository.save(post);
         var directory = new File(post.getImageUrl());
@@ -42,7 +42,7 @@ public class PostService {
         return (updatedRecordsCount > 0);
     }
 
-    public void deletePost(long id) throws IOException {
+    void deletePost(long id) throws IOException {
         var directory = new File(getPostById(id)
                 .getDirectoryUrl());
 

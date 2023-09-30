@@ -1,8 +1,8 @@
 package pl.jdacewicz.socialmediaserver.post;
 
-public class PostNotFoundException extends RuntimeException {
+class PostNotFoundException extends RuntimeException {
 
-    public PostNotFoundException(String message) {
+    PostNotFoundException(String message) {
         super(message);
     }
 }

@@ -1,6 +1,7 @@
 package pl.jdacewicz.socialmediaserver.post;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,12 +10,12 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "t_posts")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
-public class Post {
+class Post {
 
-    public final static String POSTS_STORE_DIRECTORY_URL = "";
+    final static String POSTS_STORE_DIRECTORY_URL = "data/posts";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,16 +29,16 @@ public class Post {
 
     private boolean visible = true;
 
-    public Post(String content, String image) {
+    Post(String content, String image) {
         this.content = content;
         this.image = image;
     }
 
-    public String getDirectoryUrl() {
+    String getDirectoryUrl() {
         return POSTS_STORE_DIRECTORY_URL + "/" + this.id;
     }
 
-    public String getImageUrl() {
+    String getImageUrl() {
         return getDirectoryUrl() + "/" + this.image;
     }
 }

@@ -5,7 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.jdacewicz.socialmediaserver.post.PostMapper;
-import pl.jdacewicz.socialmediaserver.post.PostRequest;
+import pl.jdacewicz.socialmediaserver.post.dto.PostRequest;
 import pl.jdacewicz.socialmediaserver.post.PostService;
 import pl.jdacewicz.socialmediaserver.post.dto.PostDto;
 

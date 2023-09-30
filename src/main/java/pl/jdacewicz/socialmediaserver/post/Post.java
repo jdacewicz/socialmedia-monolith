@@ -25,13 +25,13 @@ class Post {
 
     private String content;
 
-    private String image;
+    private String imageName;
 
     private boolean visible = true;
 
-    Post(String content, String image) {
+    Post(String content, String imageName) {
         this.content = content;
-        this.image = image;
+        this.imageName = imageName;
     }
 
     String getDirectoryUrl() {
@@ -39,6 +39,6 @@ class Post {
     }
 
     String getImageUrl() {
-        return getDirectoryUrl() + "/" + this.image;
+        return getDirectoryUrl() + "/" + this.imageName;
     }
 }

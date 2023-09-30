@@ -11,8 +11,8 @@ class PostControllerAdvice {
 
     @ExceptionHandler(PostNotFoundException.class)
     ResponseEntity<ApiError> handlePostNotFoundException(PostNotFoundException exception) {
-        HttpStatus status = HttpStatus.NOT_FOUND;
-        ApiError error = new ApiError(status.value(), exception.getMessage());
+        var status = HttpStatus.NOT_FOUND;
+        var error = new ApiError(status.value(), exception.getMessage());
         return ResponseEntity.status(status)
                 .body(error);
     }

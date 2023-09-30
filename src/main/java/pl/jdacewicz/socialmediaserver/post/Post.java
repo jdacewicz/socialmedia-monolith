@@ -12,9 +12,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-class Post {
+public class Post {
 
-    private final static String POSTS_STORE_DIRECTORY_URL = "";
+    public final static String POSTS_STORE_DIRECTORY_URL = "";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,9 +24,20 @@ class Post {
 
     private String content;
 
+    private String image;
+
     private boolean visible = true;
 
-    public static String getDirectoryUrl(long id) {
-        return POSTS_STORE_DIRECTORY_URL + "/" + id;
+    public Post(String content, String image) {
+        this.content = content;
+        this.image = image;
+    }
+
+    public String getDirectoryUrl() {
+        return POSTS_STORE_DIRECTORY_URL + "/" + this.id;
+    }
+
+    public String getImageUrl() {
+        return getDirectoryUrl() + "/" + this.image;
     }
 }

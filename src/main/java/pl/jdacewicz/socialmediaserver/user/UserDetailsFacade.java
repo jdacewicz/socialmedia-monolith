@@ -1,23 +1,10 @@
 package pl.jdacewicz.socialmediaserver.user;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-import pl.jdacewicz.socialmediaserver.user.dto.UserDetailsDto;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-@Component
-@RequiredArgsConstructor
-public class UserDetailsFacade {
+public interface UserDetailsFacade extends UserDetailsService {
 
-    private final UserDetailsServiceImpl userDetailsService;
-    private final UserDetailsMapper userDetailsMapper;
+    User createUser(User user);
 
-    public UserDetailsDto getUserByEmail(String email) {
-        var foundUser = userDetailsService.loadUserByUsername(email);
-        return userDetailsMapper.toDto(foundUser);
-    }
-
-    public UserDetailsDto createUser(User user) {
-        var createdUser = userDetailsService.createUser(user);
-        return userDetailsMapper.toDto(createdUser);
-    }
+    User findUserByEmail(String email);
 }

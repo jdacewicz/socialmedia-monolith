@@ -8,12 +8,19 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-class UserDetailsServiceImpl implements UserDetailsService {
+class UserDetailsServiceImpl implements UserDetailsFacade {
 
     private final UserRepository userRepository;
 
-    public UserDetails createUser(User user) {
+    @Override
+    public User createUser(User user) {
         return userRepository.save(user);
+    }
+
+    @Override
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UnsupportedOperationException(""));
     }
 
     @Override

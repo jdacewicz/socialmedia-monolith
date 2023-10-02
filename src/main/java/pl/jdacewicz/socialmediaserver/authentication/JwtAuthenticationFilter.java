@@ -1,4 +1,4 @@
-package pl.jdacewicz.socialmediaserver.infrastructure.authentication;
+package pl.jdacewicz.socialmediaserver.authentication;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -9,11 +9,11 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import pl.jdacewicz.socialmediaserver.token.TokenRepository;
+import pl.jdacewicz.socialmediaserver.token.TokenFacade;
+import pl.jdacewicz.socialmediaserver.user.UserDetailsFacade;
 
 import java.io.IOException;
 
@@ -22,13 +22,13 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final UserDetailsService userDetailsService;
+    private final UserDetailsFacade userDetailsFacade;
+    private final TokenFacade tokenFacade;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain
-    ) throws ServletException, IOException {
+                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
         var authenticationHeader = request.getHeader("Authorization");
         String jwtToken;
         String userEmail;
@@ -39,8 +39,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         jwtToken = authenticationHeader.substring(7);
         userEmail = jwtService.extractUsername(jwtToken);
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-            if (jwtService.isTokenValid(jwtToken, userDetails)) {
+            UserDetails userDetails = userDetailsFacade.findUserByEmail(userEmail);
+            var isTokenValid = this.tokenFacade.getTokenByCode(jwtToken)
+                    .valid();
+            if ((jwtService.isTokenValid(jwtToken, userDetails)) && isTokenValid) {
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
 

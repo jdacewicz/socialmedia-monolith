@@ -1,4 +1,4 @@
-package pl.jdacewicz.socialmediaserver.infrastructure.authentication;
+package pl.jdacewicz.socialmediaserver.infrastructure.configuraiton;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import pl.jdacewicz.socialmediaserver.authentication.JwtAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -24,7 +25,7 @@ public class SpringSecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests) -> requests
                     .requestMatchers("/api/auth/**").permitAll()
-                    .anyRequest().permitAll())
+                    .anyRequest().authenticated())
                 .sessionManagement((sessionManagementConfigurer) -> sessionManagementConfigurer.
                         sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)

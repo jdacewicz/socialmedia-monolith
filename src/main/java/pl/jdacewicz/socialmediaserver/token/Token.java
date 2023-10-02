@@ -5,25 +5,39 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.jdacewicz.socialmediaserver.user.User;
 
 @Entity
 @Table(name = "t_tokens")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
-@Setter
-class Token {
+@Getter(value = AccessLevel.PACKAGE)
+@Setter(value = AccessLevel.PACKAGE)
+public class Token {
 
     @Id
     @GeneratedValue
-    public long id;
+    private long id;
 
     @Column(unique = true)
-    public String token;
+    private String code;
 
     @Enumerated(EnumType.STRING)
-    public TokenType tokenType = TokenType.BEARER;
+    private TokenType tokenType = TokenType.BEARER;
 
-    public boolean revoked;
+    private boolean revoked = false;
 
-    public boolean expired;
+    private boolean expired = false;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public Token(String code, User user) {
+        this.code = code;
+        this.user = user;
+    }
+
+    boolean isTokenValid() {
+        return (!revoked && !expired);
+    }
 }

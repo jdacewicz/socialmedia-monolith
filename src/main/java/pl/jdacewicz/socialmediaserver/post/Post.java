@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 public class Post {
 
-    final static String POSTS_STORE_DIRECTORY_URL = "data/posts";
+    final static String MAIN_POSTS_DIRECTORY_URL = "data/posts";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,11 +34,11 @@ public class Post {
         this.imageName = imageName;
     }
 
-    public String getDirectoryUrl() {
-        return POSTS_STORE_DIRECTORY_URL + "/" + this.id;
-    }
-
     public String getImageUrl() {
         return getDirectoryUrl() + "/" + this.imageName;
+    }
+
+    public String getDirectoryUrl() {
+        return MAIN_POSTS_DIRECTORY_URL + "/" + this.id;
     }
 }

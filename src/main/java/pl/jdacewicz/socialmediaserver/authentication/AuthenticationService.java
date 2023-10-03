@@ -25,27 +25,37 @@ class AuthenticationService implements AuthenticationFacade {
 
     @Override
     public AuthenticationResponse register(RegisterRequest request) {
-        var user = User.builder()
-                .email(request.email())
-                .password(passwordEncoder.encode(request.password()))
-                .build();
+        var user = mapToUser(request);
         var createdUser = userDetailsFacade.createUser(user);
-        var jwtToken = jwtService.generateToken(createdUser);
-        var refreshToken = jwtService.generateRefreshToken(createdUser);
-        tokenFacade.saveToken(new Token(jwtToken, createdUser));
-        return new AuthenticationResponse(jwtToken, refreshToken);
+        return generateResponse(createdUser);
     }
 
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                         request.email(),
                         request.password()));
         var user = userDetailsFacade.findUserByEmail(request.email());
+        return generateResponse(user);
+    }
+
+    private User mapToUser(RegisterRequest request) {
+        return User.builder()
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password()))
+                .build();
+    }
+
+    private AuthenticationResponse generateResponse(User user) {
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
-        tokenFacade.saveToken(new Token(jwtToken, user));
+
+        createToken(jwtToken, user);
         return new AuthenticationResponse(jwtToken, refreshToken);
+    }
+
+    private void createToken(String jwtToken, User user) {
+        var token = new Token(jwtToken, user);
+        tokenFacade.saveToken(token);
     }
 }

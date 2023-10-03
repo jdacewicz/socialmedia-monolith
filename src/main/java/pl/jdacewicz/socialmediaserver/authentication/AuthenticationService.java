@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import pl.jdacewicz.socialmediaserver.authentication.dto.AuthenticationRequest;
 import pl.jdacewicz.socialmediaserver.authentication.dto.AuthenticationResponse;
 import pl.jdacewicz.socialmediaserver.authentication.dto.RegisterRequest;
+import pl.jdacewicz.socialmediaserver.token.Token;
 import pl.jdacewicz.socialmediaserver.token.TokenFacade;
-import pl.jdacewicz.socialmediaserver.token.dto.TokenRequest;
 import pl.jdacewicz.socialmediaserver.user.User;
 import pl.jdacewicz.socialmediaserver.user.UserDetailsFacade;
 
@@ -31,7 +31,7 @@ class AuthenticationService {
         var createdUser = userDetailsFacade.createUser(user);
         var jwtToken = jwtService.generateToken(createdUser);
         var refreshToken = jwtService.generateRefreshToken(createdUser);
-        tokenFacade.saveToken(new TokenRequest(createdUser, jwtToken));
+        tokenFacade.saveToken(new Token(jwtToken, createdUser));
         return new AuthenticationResponse(jwtToken, refreshToken);
     }
 
@@ -43,7 +43,7 @@ class AuthenticationService {
         var user = userDetailsFacade.findUserByEmail(request.email());
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
-        tokenFacade.saveToken(new TokenRequest(user, jwtToken));
+        tokenFacade.saveToken(new Token(jwtToken, user));
         return new AuthenticationResponse(jwtToken, refreshToken);
     }
 }

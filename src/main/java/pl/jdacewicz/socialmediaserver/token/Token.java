@@ -37,7 +37,7 @@ public class Token {
         this.user = user;
     }
 
-    boolean isTokenValid() {
+    public boolean isTokenValid() {
         return (!revoked && !expired);
     }
 }

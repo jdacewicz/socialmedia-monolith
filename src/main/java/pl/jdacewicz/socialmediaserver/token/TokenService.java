@@ -5,16 +5,18 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-class TokenService {
+class TokenService implements TokenFacade{
 
     private final TokenRepository tokenRepository;
 
-    Token getTokenByCode(String code) {
+    @Override
+    public Token getTokenByCode(String code) {
         return tokenRepository.findByCode(code)
                 .orElseThrow(() -> new UnsupportedOperationException(""));
     }
 
-    Token saveToken(Token token) {
+    @Override
+    public Token saveToken(Token token) {
         return tokenRepository.save(token);
     }
 }

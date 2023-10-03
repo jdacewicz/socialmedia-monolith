@@ -15,7 +15,7 @@ import pl.jdacewicz.socialmediaserver.user.UserDetailsFacade;
 
 @Service
 @RequiredArgsConstructor
-class AuthenticationService {
+class AuthenticationService implements AuthenticationFacade {
 
     private final UserDetailsFacade userDetailsFacade;
     private final TokenFacade tokenFacade;
@@ -23,7 +23,8 @@ class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
-    AuthenticationResponse register(RegisterRequest request) {
+    @Override
+    public AuthenticationResponse register(RegisterRequest request) {
         var user = User.builder()
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
@@ -35,7 +36,8 @@ class AuthenticationService {
         return new AuthenticationResponse(jwtToken, refreshToken);
     }
 
-    AuthenticationResponse authenticate(AuthenticationRequest request) {
+    @Override
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.email(),

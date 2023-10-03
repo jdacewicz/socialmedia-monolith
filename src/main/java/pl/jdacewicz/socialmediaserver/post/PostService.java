@@ -12,7 +12,7 @@ import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
-class PostService {
+class PostService implements PostFacade {
 
     @Value("${message.post.not-found}")
     private String notFoundPostMessage;
@@ -22,17 +22,20 @@ class PostService {
 
     private final PostRepository postRepository;
 
-    Post getPostById(long id) {
+    @Override
+    public Post getPostById(long id) {
         return postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException(notFoundPostMessage));
     }
 
-    Post getPostByIdAndVisible(long id, boolean visible) {
+    @Override
+    public Post getPostByIdAndVisible(long id, boolean visible) {
         return postRepository.findByIdAndVisible(id, visible)
                 .orElseThrow(() -> new PostNotFoundException(notFoundVisiblePostMessage));
     }
 
-    Post createPost(Post post, MultipartFile image) throws IOException {
+    @Override
+    public Post createPost(Post post, MultipartFile image) throws IOException {
         var createdPost = postRepository.save(post);
         var directory = new File(post.getImageUrl());
 
@@ -40,13 +43,15 @@ class PostService {
         return createdPost;
     }
 
+    @Override
     @Transactional
     public boolean changePostVisibility(long id, boolean visible) {
         var updatedRecordsCount = postRepository.setVisibleById(id, visible);
         return (updatedRecordsCount > 0);
     }
 
-    void deletePost(long id) throws IOException {
+    @Override
+    public void deletePost(long id) throws IOException {
         var directory = new File(getPostById(id)
                 .getDirectoryUrl());
 

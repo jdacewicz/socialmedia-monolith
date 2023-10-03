@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import pl.jdacewicz.socialmediaserver.post.Post;
 import pl.jdacewicz.socialmediaserver.post.PostFacade;
 import pl.jdacewicz.socialmediaserver.post.dto.PostDto;
 import pl.jdacewicz.socialmediaserver.post.dto.PostRequest;
@@ -20,18 +21,22 @@ public class PostController {
 
     @GetMapping("/{id}")
     public PostDto getVisiblePost(@PathVariable long id) {
-        return postFacade.getVisiblePost(id);
+        var post = postFacade.getPostByIdAndVisible(id, true);
+        return mapToDto(post);
     }
 
     @GetMapping("/peek/{id}")
     public PostDto getPostById(@PathVariable long id) {
-        return postFacade.getPostById(id);
+        var post = postFacade.getPostById(id);
+        return mapToDto(post);
     }
 
     @PostMapping
     public PostDto createPost(@RequestPart PostRequest request,
                               @RequestPart MultipartFile image) throws IOException {
-        return postFacade.createPost(request, image);
+        var post = mapToPost(request, image);
+        var createdPost = postFacade.createPost(post, image);
+        return mapToDto(createdPost);
     }
 
     @PutMapping("/{id}")
@@ -43,5 +48,17 @@ public class PostController {
     @DeleteMapping("/{id}")
     public void deletePost(@PathVariable long id) throws IOException {
         postFacade.deletePost(id);
+    }
+
+    private Post mapToPost(PostRequest request, MultipartFile image) {
+        return new Post(request.content(),
+                image.getOriginalFilename());
+    }
+
+    private PostDto mapToDto(Post post) {
+        return new PostDto(post.getId(),
+                post.getCreationDateTime(),
+                post.getContent(),
+                post.getImageUrl());
     }
 }

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
-class Post {
+public class Post {
 
     final static String POSTS_STORE_DIRECTORY_URL = "data/posts";
 
@@ -29,16 +29,16 @@ class Post {
 
     private boolean visible = true;
 
-    Post(String content, String imageName) {
+    public Post(String content, String imageName) {
         this.content = content;
         this.imageName = imageName;
     }
 
-    String getDirectoryUrl() {
+    public String getDirectoryUrl() {
         return POSTS_STORE_DIRECTORY_URL + "/" + this.id;
     }
 
-    String getImageUrl() {
+    public String getImageUrl() {
         return getDirectoryUrl() + "/" + this.imageName;
     }
 }

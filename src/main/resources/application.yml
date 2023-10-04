@@ -8,7 +8,7 @@ spring:
     password: ${db_password}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 server:
   port: 0
@@ -30,3 +30,6 @@ message:
     not-found: Could not find user
   token:
     not-found: Could not find token
+  comment:
+    not-found: Could not find comment
+    not-found-visible: Could not find visible comment

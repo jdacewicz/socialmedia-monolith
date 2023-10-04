@@ -27,7 +27,8 @@ class CommentService implements CommentFacade {
 
     @Override
     public Comment getVisibleCommentById(long id) {
-        throw new UnsupportedOperationException();
+        return commentRepository.findByIdAndVisible(id, true)
+                .orElseThrow(() -> new CommentNotFoundException(notFoundVisibleCommentMessage));
     }
 
     @Override

@@ -14,9 +14,7 @@ public interface CommentFacade {
 
     Comment commentPost(long postId, String content, MultipartFile image);
 
-    void hideComment(long id);
-
-    void showComment(long id);
+    void changeCommentVisibilityById(long id, boolean visibility);
 
     void deleteComment(long id);
 }

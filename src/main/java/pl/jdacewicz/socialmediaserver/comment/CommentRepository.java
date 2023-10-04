@@ -1,6 +1,7 @@
 package pl.jdacewicz.socialmediaserver.comment;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -14,4 +15,8 @@ interface CommentRepository extends JpaRepository<Comment, Long> {
             "INNER JOIN Post p ON c.post.id = p.id " +
             "WHERE p.id = ?1")
     List<Comment> findAllByPostId(long id);
+
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Query("UPDATE Comment c SET c.visible = ?2 WHERE c.id = ?1")
+    int setVisibleById(long id, boolean visible);
 }

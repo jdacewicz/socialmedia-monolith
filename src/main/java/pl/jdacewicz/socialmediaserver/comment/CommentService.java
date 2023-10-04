@@ -42,17 +42,12 @@ class CommentService implements CommentFacade {
     }
 
     @Override
-    public void hideComment(long id) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void showComment(long id) {
-        throw new UnsupportedOperationException();
+    public void changeCommentVisibilityById(long id, boolean visible) {
+        commentRepository.setVisibleById(id, visible);
     }
 
     @Override
     public void deleteComment(long id) {
-        throw new UnsupportedOperationException();
+        commentRepository.deleteById(id);
     }
 }

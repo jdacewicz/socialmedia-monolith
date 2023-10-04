@@ -28,3 +28,5 @@ message:
     not-found-visible: Could not find visible post
   user:
     not-found: Could not find user
+  token:
+    not-found: Could not find token

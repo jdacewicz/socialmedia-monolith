@@ -11,7 +11,7 @@ import pl.jdacewicz.socialmediaserver.ApiError;
 class UserControllerAdvice {
 
     @ExceptionHandler(UsernameNotFoundException.class)
-    ResponseEntity<ApiError> handlePostNotFoundException(UsernameNotFoundException exception) {
+    ResponseEntity<ApiError> handleUserNotFoundException(UsernameNotFoundException exception) {
         var status = HttpStatus.NOT_FOUND;
         var error = new ApiError(status.value(), exception.getMessage());
         return ResponseEntity.status(status)

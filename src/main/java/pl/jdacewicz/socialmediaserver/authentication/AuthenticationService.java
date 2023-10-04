@@ -27,7 +27,7 @@ class AuthenticationService implements AuthenticationFacade {
     public AuthenticationResponse register(RegisterRequest request) {
         var user = mapToUser(request);
         var createdUser = userDetailsFacade.createUser(user);
-        return generateResponse(createdUser);
+        return createAuthenticationResponse(createdUser);
     }
 
     @Override
@@ -36,7 +36,8 @@ class AuthenticationService implements AuthenticationFacade {
                         request.email(),
                         request.password()));
         var user = userDetailsFacade.findUserByEmail(request.email());
-        return generateResponse(user);
+        tokenFacade.revokeAllUserTokens(user.getId());
+        return createAuthenticationResponse(user);
     }
 
     private User mapToUser(RegisterRequest request) {
@@ -46,16 +47,10 @@ class AuthenticationService implements AuthenticationFacade {
                 .build();
     }
 
-    private AuthenticationResponse generateResponse(User user) {
+    private AuthenticationResponse createAuthenticationResponse(User user) {
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
-
-        createToken(jwtToken, user);
+        tokenFacade.saveToken(new Token(jwtToken, user));
         return new AuthenticationResponse(jwtToken, refreshToken);
-    }
-
-    private void createToken(String jwtToken, User user) {
-        var token = new Token(jwtToken, user);
-        tokenFacade.saveToken(token);
     }
 }

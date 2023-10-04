@@ -4,5 +4,7 @@ public interface TokenFacade {
 
     Token getTokenByCode(String code);
 
-    Token saveToken(Token token);
+    void revokeAllUserTokens(long id);
+
+    void saveToken(Token token);
 }

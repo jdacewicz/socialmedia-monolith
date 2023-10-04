@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import pl.jdacewicz.socialmediaserver.comment.Comment;
 import pl.jdacewicz.socialmediaserver.post.Post;
 import pl.jdacewicz.socialmediaserver.token.Token;
 
@@ -45,6 +46,9 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "creator")
     private List<Post> posts;
+
+    @OneToMany(mappedBy = "creator")
+    private List<Comment> comments;
 
     public String getDirectoryUrl() {
         return USERS_STORE_DIRECTORY_URL + "/" + this.id;

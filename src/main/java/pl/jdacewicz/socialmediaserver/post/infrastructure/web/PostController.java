@@ -2,12 +2,16 @@ package pl.jdacewicz.socialmediaserver.post.infrastructure.web;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.jdacewicz.socialmediaserver.post.Post;
 import pl.jdacewicz.socialmediaserver.post.PostFacade;
 import pl.jdacewicz.socialmediaserver.post.dto.PostDto;
 import pl.jdacewicz.socialmediaserver.post.dto.PostRequest;
+import pl.jdacewicz.socialmediaserver.user.User;
+import pl.jdacewicz.socialmediaserver.user.dto.UserDto;
 
 import java.io.IOException;
 
@@ -59,6 +63,26 @@ public class PostController {
         return new PostDto(post.getId(),
                 post.getCreationDateTime(),
                 post.getContent(),
-                post.getImageUrl());
+                post.getImageUrl(),
+                mapToDto(post.getCreator()));
+    }
+
+    private UserDto mapToDto(User user) {
+        return new UserDto(user.getFirstname(),
+                user.getLastname(),
+                user.getProfilePictureUrl());
+    }
+
+    private User getLoggedUser() {
+        return (User) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+    }
+
+    private Post mapToPost(PostRequest request, MultipartFile image, User loggedUser) {
+        return new Post(request.content(),
+                image.getOriginalFilename(),
+                loggedUser);
     }
 }

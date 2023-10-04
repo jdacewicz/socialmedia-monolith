@@ -44,6 +44,8 @@ class AuthenticationService implements AuthenticationFacade {
         return User.builder()
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
+                .firstname(request.firstname())
+                .lastname(request.lastname())
                 .build();
     }
 

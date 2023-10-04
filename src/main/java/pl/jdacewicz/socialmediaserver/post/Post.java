@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.jdacewicz.socialmediaserver.user.User;
 
 import java.time.LocalDateTime;
 
@@ -29,9 +30,14 @@ public class Post {
 
     private boolean visible = true;
 
-    public Post(String content, String imageName) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User creator;
+
+    public Post(String content, String imageName, User creator) {
         this.content = content;
         this.imageName = imageName;
+        this.creator = creator;
     }
 
     public String getImageUrl() {

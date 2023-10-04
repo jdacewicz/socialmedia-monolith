@@ -13,7 +13,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import pl.jdacewicz.socialmediaserver.token.TokenFacade;
-import pl.jdacewicz.socialmediaserver.user.UserDetailsFacade;
+import pl.jdacewicz.socialmediaserver.user.UserFacade;
 
 import java.io.IOException;
 
@@ -22,7 +22,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final UserDetailsFacade userDetailsFacade;
+    private final UserFacade userFacade;
     private final TokenFacade tokenFacade;
 
     @Override
@@ -57,7 +57,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private void authenticate(String userEmail, String jwtToken, HttpServletRequest request) {
-        var userDetails = userDetailsFacade.loadUserByUsername(userEmail);
+        var userDetails = userFacade.loadUserByUsername(userEmail);
         if (isTokenValidAndActive(jwtToken, userDetails)) {
             setSecurityContextAuthentication(userDetails, request);
         }

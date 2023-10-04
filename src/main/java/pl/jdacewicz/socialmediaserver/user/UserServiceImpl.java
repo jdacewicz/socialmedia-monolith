@@ -2,18 +2,31 @@ package pl.jdacewicz.socialmediaserver.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
-class UserDetailsServiceImpl implements UserDetailsFacade {
+class UserServiceImpl implements UserFacade {
 
     @Value("${message.user.not-found}")
     private String notFoundUserMessage;
 
     private final UserRepository userRepository;
+
+    @Override
+    public User getLoggedUser() {
+        var user = Optional
+                .ofNullable((User) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal());
+        return user.orElseThrow(() -> new UserNotSignedInException(""));
+    }
 
     @Override
     public User createUser(User user) {

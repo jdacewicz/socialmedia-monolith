@@ -11,13 +11,13 @@ import pl.jdacewicz.socialmediaserver.authentication.dto.RegisterRequest;
 import pl.jdacewicz.socialmediaserver.token.Token;
 import pl.jdacewicz.socialmediaserver.token.TokenFacade;
 import pl.jdacewicz.socialmediaserver.user.User;
-import pl.jdacewicz.socialmediaserver.user.UserDetailsFacade;
+import pl.jdacewicz.socialmediaserver.user.UserFacade;
 
 @Service
 @RequiredArgsConstructor
 class AuthenticationService implements AuthenticationFacade {
 
-    private final UserDetailsFacade userDetailsFacade;
+    private final UserFacade userFacade;
     private final TokenFacade tokenFacade;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
@@ -26,7 +26,7 @@ class AuthenticationService implements AuthenticationFacade {
     @Override
     public AuthenticationResponse register(RegisterRequest request) {
         var user = mapToUser(request);
-        var createdUser = userDetailsFacade.createUser(user);
+        var createdUser = userFacade.createUser(user);
         return createAuthenticationResponse(createdUser);
     }
 
@@ -35,7 +35,7 @@ class AuthenticationService implements AuthenticationFacade {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                         request.email(),
                         request.password()));
-        var user = userDetailsFacade.findUserByEmail(request.email());
+        var user = userFacade.findUserByEmail(request.email());
         tokenFacade.revokeAllUserTokens(user.getId());
         return createAuthenticationResponse(user);
     }

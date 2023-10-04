@@ -9,18 +9,18 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import pl.jdacewicz.socialmediaserver.user.UserDetailsFacade;
+import pl.jdacewicz.socialmediaserver.user.UserFacade;
 
 @Configuration
 @RequiredArgsConstructor
 public class SpringApplicationConfig {
 
-    private final UserDetailsFacade userDetailsFacade;
+    private final UserFacade userFacade;
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsFacade);
+        authenticationProvider.setUserDetailsService(userFacade);
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }

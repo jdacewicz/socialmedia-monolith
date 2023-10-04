@@ -6,9 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import pl.jdacewicz.socialmediaserver.post.Post;
-import pl.jdacewicz.socialmediaserver.post.PostFacade;
-import pl.jdacewicz.socialmediaserver.user.User;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +22,6 @@ class CommentService implements CommentFacade {
     private String notFoundVisibleCommentMessage;
 
     private final CommentRepository commentRepository;
-    private final PostFacade postFacade;
 
     @Override
     public Comment getCommentById(long id) {
@@ -45,9 +41,8 @@ class CommentService implements CommentFacade {
     }
 
     @Override
-    public Comment commentPost(long postId, String content, User creator, MultipartFile image) throws IOException {
-        var post = postFacade.getPostById(postId);
-        var createdComment = commentRepository.save(mapToComment(content, image.getOriginalFilename(), creator, post));
+    public Comment createComment(Comment comment, MultipartFile image) throws IOException {
+        var createdComment = commentRepository.save(comment);
         var directory = new File(createdComment.getImageUrl());
         FileUtils.copyInputStreamToFile(image.getInputStream(), directory);
         return createdComment;
@@ -65,12 +60,5 @@ class CommentService implements CommentFacade {
                 .getDirectoryUrl());
         FileUtils.deleteDirectory(directory);
         commentRepository.deleteById(id);
-    }
-
-    private Comment mapToComment(String content, String imageName, User creator, Post post) {
-        return new Comment(content,
-                imageName,
-                creator,
-                post);
     }
 }

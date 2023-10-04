@@ -3,7 +3,6 @@ package pl.jdacewicz.socialmediaserver.post.infrastructure.web;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.jdacewicz.socialmediaserver.post.Post;
@@ -11,7 +10,8 @@ import pl.jdacewicz.socialmediaserver.post.PostFacade;
 import pl.jdacewicz.socialmediaserver.post.dto.PostDto;
 import pl.jdacewicz.socialmediaserver.post.dto.PostRequest;
 import pl.jdacewicz.socialmediaserver.user.User;
-import pl.jdacewicz.socialmediaserver.user.dto.UserDto;
+import pl.jdacewicz.socialmediaserver.user.UserFacade;
+import pl.jdacewicz.socialmediaserver.user.UserMapper;
 
 import java.io.IOException;
 
@@ -22,6 +22,8 @@ import java.io.IOException;
 public class PostController {
 
     private final PostFacade postFacade;
+    private final UserFacade userFacade;
+    private final UserMapper userMapper;
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/{id}")
@@ -41,7 +43,8 @@ public class PostController {
     @PostMapping
     public PostDto createPost(@RequestPart PostRequest request,
                               @RequestPart MultipartFile image) throws IOException {
-        var post = mapToPost(request, image, getLoggedUser());
+        var loggedUser = userFacade.getLoggedUser();
+        var post = mapToPost(request, image, loggedUser);
         var createdPost = postFacade.createPost(post, image);
         return mapToDto(createdPost);
     }
@@ -49,7 +52,7 @@ public class PostController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public void changePostVisibility(@PathVariable long id,
-                                        @RequestParam boolean visible) {
+                                     @RequestParam boolean visible) {
         postFacade.changePostVisibility(id, visible);
     }
 
@@ -64,20 +67,7 @@ public class PostController {
                 post.getCreationDateTime(),
                 post.getContent(),
                 post.getImageUrl(),
-                mapToDto(post.getCreator()));
-    }
-
-    private UserDto mapToDto(User user) {
-        return new UserDto(user.getFirstname(),
-                user.getLastname(),
-                user.getProfilePictureUrl());
-    }
-
-    private User getLoggedUser() {
-        return (User) SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getPrincipal();
+                userMapper.mapToDto(post.getCreator()));
     }
 
     private Post mapToPost(PostRequest request, MultipartFile image, User loggedUser) {

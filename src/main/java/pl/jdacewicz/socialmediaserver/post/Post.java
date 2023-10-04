@@ -15,7 +15,7 @@ import java.util.List;
 @Table(name = "t_posts")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter
+@Setter(value = AccessLevel.PACKAGE)
 public class Post {
 
     final static String MAIN_POSTS_DIRECTORY_URL = "data/posts";

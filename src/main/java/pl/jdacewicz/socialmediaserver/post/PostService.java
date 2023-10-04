@@ -37,7 +37,7 @@ class PostService implements PostFacade {
     @Override
     public Post createPost(Post post, MultipartFile image) throws IOException {
         var createdPost = postRepository.save(post);
-        var directory = new File(post.getImageUrl());
+        var directory = new File(createdPost.getImageUrl());
         FileUtils.copyInputStreamToFile(image.getInputStream(), directory);
         return createdPost;
     }

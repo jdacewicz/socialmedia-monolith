@@ -57,7 +57,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private void authenticate(String userEmail, String jwtToken, HttpServletRequest request) {
-        var userDetails = userDetailsFacade.findUserByEmail(userEmail);
+        var userDetails = userDetailsFacade.loadUserByUsername(userEmail);
         if (isTokenValidAndActive(jwtToken, userDetails)) {
             setSecurityContextAuthentication(userDetails, request);
         }

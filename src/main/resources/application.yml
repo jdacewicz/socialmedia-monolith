@@ -24,5 +24,7 @@ application:
 
 message:
   post:
-    not-found: Could not find post with given id
-    not-found-visible: Could not find visible post with given id
+    not-found: Could not find post
+    not-found-visible: Could not find visible post
+  user:
+    not-found: Could not find user

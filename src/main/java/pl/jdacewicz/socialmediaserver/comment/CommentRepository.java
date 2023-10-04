@@ -18,5 +18,5 @@ interface CommentRepository extends JpaRepository<Comment, Long> {
 
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("UPDATE Comment c SET c.visible = ?2 WHERE c.id = ?1")
-    int setVisibleById(long id, boolean visible);
+    void setVisibleById(long id, boolean visible);
 }

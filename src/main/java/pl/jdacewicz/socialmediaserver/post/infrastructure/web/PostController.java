@@ -48,9 +48,9 @@ public class PostController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
-    public boolean changePostVisibility(@PathVariable long id,
+    public void changePostVisibility(@PathVariable long id,
                                         @RequestParam boolean visible) {
-        return postFacade.changePostVisibility(id, visible);
+        postFacade.changePostVisibility(id, visible);
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")

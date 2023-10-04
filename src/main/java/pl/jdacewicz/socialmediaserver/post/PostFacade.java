@@ -12,7 +12,7 @@ public interface PostFacade {
 
     Post createPost(Post post, MultipartFile image)  throws IOException;
 
-    boolean changePostVisibility(long id, boolean visible);
+    void changePostVisibility(long id, boolean visible);
 
     void deletePost(long id) throws IOException;
 }

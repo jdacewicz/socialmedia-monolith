@@ -38,16 +38,14 @@ class PostService implements PostFacade {
     public Post createPost(Post post, MultipartFile image) throws IOException {
         var createdPost = postRepository.save(post);
         var directory = new File(post.getImageUrl());
-
         FileUtils.copyInputStreamToFile(image.getInputStream(), directory);
         return createdPost;
     }
 
     @Override
     @Transactional
-    public boolean changePostVisibility(long id, boolean visible) {
-        var updatedRecordsCount = postRepository.setVisibleById(id, visible);
-        return (updatedRecordsCount > 0);
+    public void changePostVisibility(long id, boolean visible) {
+        postRepository.setVisibleById(id, visible);
     }
 
     @Override

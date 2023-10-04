@@ -23,40 +23,40 @@ public class PostController {
 
     private final PostFacade postFacade;
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/{id}")
     public PostDto getVisiblePost(@PathVariable long id) {
         var post = postFacade.getPostByIdAndVisible(id, true);
         return mapToDto(post);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/peek/{id}")
     public PostDto getPostById(@PathVariable long id) {
         var post = postFacade.getPostById(id);
         return mapToDto(post);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping
     public PostDto createPost(@RequestPart PostRequest request,
                               @RequestPart MultipartFile image) throws IOException {
-        var post = mapToPost(request, image);
+        var post = mapToPost(request, image, getLoggedUser());
         var createdPost = postFacade.createPost(post, image);
         return mapToDto(createdPost);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public boolean changePostVisibility(@PathVariable long id,
                                         @RequestParam boolean visible) {
         return postFacade.changePostVisibility(id, visible);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("/{id}")
     public void deletePost(@PathVariable long id) throws IOException {
         postFacade.deletePost(id);
-    }
-
-    private Post mapToPost(PostRequest request, MultipartFile image) {
-        return new Post(request.content(),
-                image.getOriginalFilename());
     }
 
     private PostDto mapToDto(Post post) {

@@ -10,7 +10,7 @@ public interface CommentFacade {
 
     Comment getVisibleCommentById(long id);
 
-    List<Comment> getComments(long postId);
+    List<Comment> getCommentsByPostId(long postId);
 
     Comment commentPost(long postId, String content, MultipartFile image);
 

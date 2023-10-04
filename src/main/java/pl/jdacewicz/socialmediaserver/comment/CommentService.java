@@ -32,8 +32,8 @@ class CommentService implements CommentFacade {
     }
 
     @Override
-    public List<Comment> getComments(long postId) {
-        throw new UnsupportedOperationException();
+    public List<Comment> getCommentsByPostId(long postId) {
+        return commentRepository.findAllByPostId(postId);
     }
 
     @Override

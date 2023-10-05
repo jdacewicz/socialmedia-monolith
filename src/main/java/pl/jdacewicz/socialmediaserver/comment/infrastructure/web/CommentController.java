@@ -24,12 +24,18 @@ public class CommentController {
     private final UserFacade userFacade;
     private final CommentMapper commentMapper;
 
-    public CommentDto getVisibleCommentById() {
-        throw new UnsupportedOperationException();
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/{id}")
+    public CommentDto getVisibleCommentById(@PathVariable long id) {
+        var comment = commentFacade.getVisibleCommentById(id);
+        return commentMapper.mapToDto(comment);
     }
 
-    public CommentDto getCommentById() {
-        throw new UnsupportedOperationException();
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/peek/{id}")
+    public CommentDto getCommentById(@PathVariable long id) {
+        var comment = commentFacade.getCommentById(id);
+        return commentMapper.mapToDto(comment);
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")

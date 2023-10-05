@@ -9,6 +9,7 @@ import pl.jdacewicz.socialmediaserver.comment.Comment;
 import pl.jdacewicz.socialmediaserver.user.User;
 
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -37,7 +38,7 @@ public class Post {
     private User creator;
 
     @OneToMany(mappedBy = "post")
-    private List<Comment> comments;
+    private List<Comment> comments = new LinkedList<>();
 
     public Post(String content, String imageName, User creator) {
         this.content = content;

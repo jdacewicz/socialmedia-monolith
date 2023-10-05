@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.jdacewicz.socialmediaserver.comment.Comment;
+import pl.jdacewicz.socialmediaserver.reaction.Reaction;
 import pl.jdacewicz.socialmediaserver.user.User;
 
 import java.time.LocalDateTime;
@@ -39,6 +40,9 @@ public class Post {
 
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new LinkedList<>();
+
+    @ManyToMany
+    private List<Reaction> reactions = new LinkedList<>();
 
     public Post(String content, String imageName, User creator) {
         this.content = content;

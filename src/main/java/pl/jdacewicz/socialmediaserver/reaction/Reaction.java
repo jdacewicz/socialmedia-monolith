@@ -5,6 +5,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.jdacewicz.socialmediaserver.comment.Comment;
+import pl.jdacewicz.socialmediaserver.post.Post;
+
+import java.util.List;
 
 @Entity
 @Table(name = "t_reactions")
@@ -22,6 +26,12 @@ public class Reaction {
     private String name;
 
     private String imageName;
+
+    @ManyToMany(mappedBy = "reactions")
+    private List<Post> posts;
+
+    @ManyToMany(mappedBy = "reactions")
+    private List<Comment> comments;
 
     public String getImageUrl() {
         return getDirectoryUrl() + "/" + this.imageName;

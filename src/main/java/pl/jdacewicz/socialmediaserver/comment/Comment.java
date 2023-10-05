@@ -6,9 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.jdacewicz.socialmediaserver.post.Post;
+import pl.jdacewicz.socialmediaserver.reaction.Reaction;
 import pl.jdacewicz.socialmediaserver.user.User;
 
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 
 @Entity
 @Table(name = "t_comments")
@@ -38,6 +41,9 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
+
+    @ManyToMany
+    private List<Reaction> reactions = new LinkedList<>();
 
     public Comment(String content, String imageName, User creator, Post post) {
         this.content = content;

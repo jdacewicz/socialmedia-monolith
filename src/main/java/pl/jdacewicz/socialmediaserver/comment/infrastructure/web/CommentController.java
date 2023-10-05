@@ -5,14 +5,11 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import pl.jdacewicz.socialmediaserver.comment.Comment;
 import pl.jdacewicz.socialmediaserver.comment.CommentFacade;
+import pl.jdacewicz.socialmediaserver.comment.CommentMapper;
 import pl.jdacewicz.socialmediaserver.comment.dto.CommentDto;
-import pl.jdacewicz.socialmediaserver.post.Post;
 import pl.jdacewicz.socialmediaserver.post.PostFacade;
-import pl.jdacewicz.socialmediaserver.user.User;
 import pl.jdacewicz.socialmediaserver.user.UserFacade;
-import pl.jdacewicz.socialmediaserver.user.UserMapper;
 
 import java.io.IOException;
 
@@ -25,7 +22,7 @@ public class CommentController {
     private final CommentFacade commentFacade;
     private final PostFacade postFacade;
     private final UserFacade userFacade;
-    private final UserMapper userMapper;
+    private final CommentMapper commentMapper;
 
     public CommentDto getVisibleCommentById() {
         throw new UnsupportedOperationException();
@@ -42,9 +39,9 @@ public class CommentController {
                                   @RequestPart MultipartFile image) throws IOException {
         var loggedUser = userFacade.getLoggedUser();
         var post = postFacade.getPostById(postId);
-        var comment = mapToComment(content, image, loggedUser, post);
+        var comment = commentMapper.mapToComment(content, image, loggedUser, post);
         var createdComment = commentFacade.createComment(comment, image);
-        return mapToDto(createdComment);
+        return commentMapper.mapToDto(createdComment);
     }
 
     public void changeCommentVisibility() {
@@ -53,20 +50,5 @@ public class CommentController {
 
     public void deleteComment() {
         throw new UnsupportedOperationException();
-    }
-
-    private Comment mapToComment(String content, MultipartFile image, User loggedUser, Post post) {
-        return new Comment(content,
-                image.getOriginalFilename(),
-                loggedUser,
-                post);
-    }
-
-    private CommentDto mapToDto(Comment comment) {
-        return new CommentDto(comment.getId(),
-                comment.getCreationDateTime(),
-                comment.getContent(),
-                comment.getImageUrl(),
-                userMapper.mapToDto(comment.getCreator()));
     }
 }

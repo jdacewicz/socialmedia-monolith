@@ -50,11 +50,16 @@ public class CommentController {
         return commentMapper.mapToDto(createdComment);
     }
 
-    public void changeCommentVisibility() {
-        throw new UnsupportedOperationException();
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping("/{id}")
+    public void changeCommentVisibility(@PathVariable long id,
+                                        @RequestParam boolean visible) {
+        commentFacade.changeCommentVisibilityById(id, visible);
     }
 
-    public void deleteComment() {
-        throw new UnsupportedOperationException();
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @DeleteMapping("/{id}")
+    public void deleteComment(@PathVariable long id) throws IOException {
+        commentFacade.deleteComment(id);
     }
 }

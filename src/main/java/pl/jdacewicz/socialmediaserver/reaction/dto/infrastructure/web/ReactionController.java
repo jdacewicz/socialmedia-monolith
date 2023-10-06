@@ -57,8 +57,12 @@ public class ReactionController {
         reactionFacade.reactToComment(reactionId, comment);
     }
 
-    public void updateReaction() {
-        throw new UnsupportedOperationException();
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping("/{id}")
+    public void updateReaction(@PathVariable int id,
+                               @RequestPart String name,
+                               @RequestPart MultipartFile image) throws IOException {
+        reactionFacade.updateReaction(id, name, image);
     }
 
     public void deleteReaction() {

@@ -19,7 +19,7 @@ public interface ReactionFacade {
 
     void reactToComment(int reactionId, Comment comment);
 
-    void updateReaction(Reaction reaction, MultipartFile image) throws IOException;
+    void updateReaction(int id, String name, MultipartFile image) throws IOException;
 
     void deleteReaction(int id) throws IOException;
 }

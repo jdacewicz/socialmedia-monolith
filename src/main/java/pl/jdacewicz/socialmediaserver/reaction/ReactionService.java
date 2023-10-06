@@ -60,10 +60,11 @@ class ReactionService implements ReactionFacade{
 
     @Override
     @Transactional
-    public void updateReaction(Reaction reaction, MultipartFile image) throws IOException {
+    public void updateReaction(int id, String name, MultipartFile image) throws IOException {
+        var reaction = getReactionById(id);
         var directory = new File(reaction.getImageUrl());
         FileUtils.copyInputStreamToFile(image.getInputStream(), directory);
-        reactionRepository.setReactionNameAndImageNameById(reaction.getId(), reaction.getName(),
+        reactionRepository.setReactionNameAndImageNameById(id, name,
                 image.getOriginalFilename());
     }
 

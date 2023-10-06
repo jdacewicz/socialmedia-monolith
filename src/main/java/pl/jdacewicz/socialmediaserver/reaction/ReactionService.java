@@ -1,12 +1,14 @@
 package pl.jdacewicz.socialmediaserver.reaction;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.jdacewicz.socialmediaserver.comment.Comment;
 import pl.jdacewicz.socialmediaserver.post.Post;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -27,7 +29,7 @@ class ReactionService implements ReactionFacade{
 
     @Override
     public List<Reaction> getReactions() {
-        return null;
+        return reactionRepository.findAll();
     }
 
     @Override
@@ -51,7 +53,10 @@ class ReactionService implements ReactionFacade{
     }
 
     @Override
-    public void deleteReaction(int id) {
-
+    public void deleteReaction(int id) throws IOException {
+        var directory = new File(getReactionById(id)
+                .getDirectoryUrl());
+        FileUtils.deleteDirectory(directory);
+        reactionRepository.deleteById(id);
     }
 }

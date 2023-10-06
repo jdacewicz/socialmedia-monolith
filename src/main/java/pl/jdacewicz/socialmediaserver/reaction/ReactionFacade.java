@@ -21,5 +21,5 @@ public interface ReactionFacade {
 
     void updateReaction(int id, String name, MultipartFile image) throws IOException;
 
-    void deleteReaction(int id);
+    void deleteReaction(int id) throws IOException;
 }

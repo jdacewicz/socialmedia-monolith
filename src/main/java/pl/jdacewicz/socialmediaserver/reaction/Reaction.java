@@ -33,6 +33,11 @@ public class Reaction {
     @ManyToMany(mappedBy = "reactions")
     private List<Comment> comments;
 
+    public Reaction(String name, String imageName) {
+        this.name = name;
+        this.imageName = imageName;
+    }
+
     public String getImageUrl() {
         return getDirectoryUrl() + "/" + this.imageName;
     }

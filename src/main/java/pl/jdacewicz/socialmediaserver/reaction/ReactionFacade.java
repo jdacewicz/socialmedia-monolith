@@ -5,13 +5,10 @@ import pl.jdacewicz.socialmediaserver.comment.Comment;
 import pl.jdacewicz.socialmediaserver.post.Post;
 
 import java.io.IOException;
-import java.util.List;
 
 public interface ReactionFacade {
 
     Reaction getReactionById(int id);
-
-    List<Reaction> getReactions();
 
     Reaction createReaction(Reaction reaction, MultipartFile image) throws IOException;
 

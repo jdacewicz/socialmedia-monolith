@@ -11,7 +11,6 @@ import pl.jdacewicz.socialmediaserver.post.Post;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,11 +25,6 @@ class ReactionService implements ReactionFacade{
     public Reaction getReactionById(int id) {
         return reactionRepository.findById(id)
                 .orElseThrow(() -> new ReactionNotFoundException(notFoundReactionMessage));
-    }
-
-    @Override
-    public List<Reaction> getReactions() {
-        return reactionRepository.findAll();
     }
 
     @Override

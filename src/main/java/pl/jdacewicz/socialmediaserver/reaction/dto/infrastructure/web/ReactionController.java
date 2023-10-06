@@ -65,7 +65,9 @@ public class ReactionController {
         reactionFacade.updateReaction(id, name, image);
     }
 
-    public void deleteReaction() {
-        throw new UnsupportedOperationException();
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping("/{id}")
+    public void deleteReaction(@PathVariable int id) throws IOException {
+        reactionFacade.deleteReaction(id);
     }
 }

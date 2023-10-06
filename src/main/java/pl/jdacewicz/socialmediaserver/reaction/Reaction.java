@@ -21,7 +21,7 @@ public class Reaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
 
     private String name;
 

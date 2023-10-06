@@ -1,4 +1,4 @@
-package pl.jdacewicz.socialmediaserver.reaction.dto.infrastructure.web;
+package pl.jdacewicz.socialmediaserver.reaction.infrastructure.web;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;

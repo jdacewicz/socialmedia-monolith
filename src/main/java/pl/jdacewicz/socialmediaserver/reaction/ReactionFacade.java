@@ -13,13 +13,13 @@ public interface ReactionFacade {
 
     List<Reaction> getReactions();
 
-    Reaction createReaction(String name, MultipartFile image) throws IOException;
+    Reaction createReaction(Reaction reaction, MultipartFile image) throws IOException;
 
-    void reactToPost(Reaction reaction, Post post);
+    void reactToPost(int reactionId, Post post);
 
-    void reactToComment(Reaction reaction, Comment comment);
+    void reactToComment(int reactionId, Comment comment);
 
-    void updateReaction(int id, String name, MultipartFile image) throws IOException;
+    void updateReaction(Reaction reaction, MultipartFile image) throws IOException;
 
     void deleteReaction(int id) throws IOException;
 }

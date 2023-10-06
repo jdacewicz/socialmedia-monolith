@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pl.jdacewicz.socialmediaserver.comment.Comment;
 import pl.jdacewicz.socialmediaserver.post.Post;
@@ -33,23 +34,30 @@ class ReactionService implements ReactionFacade{
     }
 
     @Override
-    public Reaction createReaction(String name, MultipartFile image) throws IOException {
-        return null;
+    public Reaction createReaction(Reaction reaction, MultipartFile image) throws IOException {
+        var createdReaction = reactionRepository.save(reaction);
+        var directory = new File(createdReaction.getImageUrl());
+        FileUtils.copyInputStreamToFile(image.getInputStream(), directory);
+        return createdReaction;
     }
 
     @Override
-    public void reactToPost(Reaction reaction, Post post) {
+    public void reactToPost(int reactionId, Post post) {
 
     }
 
     @Override
-    public void reactToComment(Reaction reaction, Comment comment) {
+    public void reactToComment(int reactionId, Comment comment) {
 
     }
 
     @Override
-    public void updateReaction(int id, String name, MultipartFile image) throws IOException {
-
+    @Transactional
+    public void updateReaction(Reaction reaction, MultipartFile image) throws IOException {
+        var directory = new File(reaction.getImageUrl());
+        FileUtils.copyInputStreamToFile(image.getInputStream(), directory);
+        reactionRepository.setReactionNameAndImageName(reaction.getId(), reaction.getName(),
+                image.getOriginalFilename());
     }
 
     @Override

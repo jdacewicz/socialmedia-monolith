@@ -1,6 +1,7 @@
 package pl.jdacewicz.socialmediaserver.post.dto;
 
 import pl.jdacewicz.socialmediaserver.comment.dto.CommentDto;
+import pl.jdacewicz.socialmediaserver.reaction.dto.ReactionDto;
 import pl.jdacewicz.socialmediaserver.user.dto.UserDto;
 
 import java.time.LocalDateTime;
@@ -11,5 +12,6 @@ public record PostDto(long id,
                       String content,
                       String imageUrl,
                       UserDto creator,
-                      List<CommentDto> comments) {
+                      List<CommentDto> comments,
+                      List<ReactionDto> reactions) {
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import pl.jdacewicz.socialmediaserver.comment.dto.CommentDto;
 import pl.jdacewicz.socialmediaserver.post.Post;
+import pl.jdacewicz.socialmediaserver.reaction.ReactionMapper;
 import pl.jdacewicz.socialmediaserver.user.User;
 import pl.jdacewicz.socialmediaserver.user.UserMapper;
 
@@ -15,6 +16,7 @@ import java.util.List;
 public class CommentMapper {
 
     private final UserMapper userMapper;
+    private final ReactionMapper reactionMapper;
 
     public List<CommentDto> mapToDto(List<Comment> comments) {
         return comments
@@ -28,7 +30,8 @@ public class CommentMapper {
                 comment.getCreationDateTime(),
                 comment.getContent(),
                 comment.getImageUrl(),
-                userMapper.mapToDto(comment.getCreator()));
+                userMapper.mapToDto(comment.getCreator()),
+                reactionMapper.mapToDto(comment.getReactions()));
     }
 
     public Comment mapToComment(String content, MultipartFile image, User loggedUser, Post post) {

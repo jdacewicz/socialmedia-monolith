@@ -43,12 +43,19 @@ class ReactionService implements ReactionFacade{
 
     @Override
     public void reactToPost(int reactionId, Post post) {
+        var reaction = getReactionById(reactionId);
+        reaction.getPosts()
+                .add(post);
+        reactionRepository.save(reaction);
 
     }
 
     @Override
     public void reactToComment(int reactionId, Comment comment) {
-
+        var reaction = getReactionById(reactionId);
+        reaction.getComments()
+                .add(comment);
+        reactionRepository.save(reaction);
     }
 
     @Override
@@ -56,7 +63,7 @@ class ReactionService implements ReactionFacade{
     public void updateReaction(Reaction reaction, MultipartFile image) throws IOException {
         var directory = new File(reaction.getImageUrl());
         FileUtils.copyInputStreamToFile(image.getInputStream(), directory);
-        reactionRepository.setReactionNameAndImageName(reaction.getId(), reaction.getName(),
+        reactionRepository.setReactionNameAndImageNameById(reaction.getId(), reaction.getName(),
                 image.getOriginalFilename());
     }
 

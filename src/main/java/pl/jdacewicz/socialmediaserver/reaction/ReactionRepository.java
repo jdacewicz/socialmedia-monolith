@@ -10,5 +10,5 @@ interface ReactionRepository extends JpaRepository<Reaction, Integer> {
     @Query("UPDATE Reaction r " +
             "SET r.name = ?2, r.imageName = ?3 " +
             "WHERE r.id = ?1")
-    void setReactionNameAndImageName(int id, String reactionName, String imageName);
+    void setReactionNameAndImageNameById(int id, String reactionName, String imageName);
 }

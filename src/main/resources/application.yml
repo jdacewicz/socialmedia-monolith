@@ -33,3 +33,5 @@ message:
   comment:
     not-found: Could not find comment
     not-found-visible: Could not find visible comment
+  reaction:
+    not-found: Could not find reaction

@@ -1,6 +1,6 @@
 package pl.jdacewicz.socialmediaserver.comment.dto;
 
-import pl.jdacewicz.socialmediaserver.reaction.dto.ReactionDto;
+import pl.jdacewicz.socialmediaserver.reaction.dto.ReactionCounter;
 import pl.jdacewicz.socialmediaserver.user.dto.UserDto;
 
 import java.time.LocalDateTime;
@@ -11,5 +11,5 @@ public record CommentDto(long id,
                          String content,
                          String imageUrl,
                          UserDto creator,
-                         List<ReactionDto> reactions) {
+                         List<ReactionCounter> reactionCounters) {
 }

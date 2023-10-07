@@ -25,7 +25,7 @@ public class ReactionController {
     @GetMapping("/{id}")
     public ReactionDto getReactionById(@PathVariable int id) {
         var reaction = reactionFacade.getReactionById(id);
-        return reactionMapper.mapToDto(reaction, 1);
+        return reactionMapper.mapToDto(reaction);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -34,7 +34,7 @@ public class ReactionController {
                                       @RequestPart MultipartFile image) throws IOException {
         var reaction = new Reaction(name, image.getOriginalFilename());
         var createdReaction = reactionFacade.createReaction(reaction, image);
-        return reactionMapper.mapToDto(createdReaction, 1);
+        return reactionMapper.mapToDto(createdReaction);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

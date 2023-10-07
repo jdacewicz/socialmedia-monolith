@@ -25,7 +25,7 @@ public class PostMapper {
                 post.getImageUrl(),
                 userMapper.mapToDto(post.getCreator()),
                 commentMapper.mapToDto(post.getComments()),
-                reactionMapper.mapToDto(post.getReactions()));
+                reactionMapper.mapToCounter(post.getReactions()));
     }
 
     public Post mapToPost(PostRequest request, MultipartFile image, User loggedUser) {

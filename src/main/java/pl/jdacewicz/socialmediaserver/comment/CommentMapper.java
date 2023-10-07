@@ -31,7 +31,7 @@ public class CommentMapper {
                 comment.getContent(),
                 comment.getImageUrl(),
                 userMapper.mapToDto(comment.getCreator()),
-                reactionMapper.mapToDto(comment.getReactions()));
+                reactionMapper.mapToCounter(comment.getReactions()));
     }
 
     public Comment mapToComment(String content, MultipartFile image, User loggedUser, Post post) {

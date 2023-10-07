@@ -57,4 +57,18 @@ public class Post {
     public String getDirectoryUrl() {
         return MAIN_POSTS_DIRECTORY_URL + "/" + this.id;
     }
+
+    public void addReactionUser(ReactionUser reactionUser) {
+        if (isUserInReactionUsers(reactionUser.getUser())) {
+            throw new UnsupportedOperationException();
+        }
+        this.reactionUsers.add(reactionUser);
+        reactionUser.getPosts().add(this);
+    }
+
+    private boolean isUserInReactionUsers(User user) {
+        return this.reactionUsers.stream()
+                .anyMatch(r -> r.getUser()
+                        .equals(user));
+    }
 }

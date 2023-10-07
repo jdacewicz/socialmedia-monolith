@@ -52,8 +52,7 @@ class PostService implements PostFacade {
     @Override
     public Post reactToPost(long postId, ReactionUser reactionUser) {
         var post = getPostById(postId);
-        reactionUser.getPosts().add(post);
-        post.getReactionUsers().add(reactionUser);
+        post.addReactionUser(reactionUser);
         return postRepository.save(post);
     }
 

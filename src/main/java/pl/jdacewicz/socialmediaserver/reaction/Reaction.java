@@ -5,15 +5,13 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pl.jdacewicz.socialmediaserver.comment.Comment;
-import pl.jdacewicz.socialmediaserver.post.Post;
 
 import java.util.List;
 
 @Entity
 @Table(name = "t_reactions")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter(value = AccessLevel.PACKAGE)
+@Getter
 @Setter(value = AccessLevel.PACKAGE)
 public class Reaction {
 
@@ -27,11 +25,8 @@ public class Reaction {
 
     private String imageName;
 
-    @ManyToMany(mappedBy = "reactions")
-    private List<Post> posts;
-
-    @ManyToMany(mappedBy = "reactions")
-    private List<Comment> comments;
+    @OneToMany(mappedBy = "reaction")
+    private List<ReactionUser> reactionUsers;
 
     public Reaction(String name, String imageName) {
         this.name = name;
@@ -44,13 +39,5 @@ public class Reaction {
 
     public String getDirectoryUrl() {
         return MAIN_REACTIONS_DIRECTORY_URL + "/" + this.id;
-    }
-
-    public void addPost(Post post) {
-        this.posts.add(post);
-    }
-
-    public void addComment(Comment comment) {
-        this.comments.add(comment);
     }
 }

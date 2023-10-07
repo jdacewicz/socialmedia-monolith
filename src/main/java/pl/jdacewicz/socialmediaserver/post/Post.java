@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.jdacewicz.socialmediaserver.comment.Comment;
-import pl.jdacewicz.socialmediaserver.reaction.Reaction;
+import pl.jdacewicz.socialmediaserver.reaction.ReactionUser;
 import pl.jdacewicz.socialmediaserver.user.User;
 
 import java.time.LocalDateTime;
@@ -42,7 +42,7 @@ public class Post {
     private List<Comment> comments = new LinkedList<>();
 
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    private List<Reaction> reactions = new LinkedList<>();
+    private List<ReactionUser> reactionUsers = new LinkedList<>();
 
     public Post(String content, String imageName, User creator) {
         this.content = content;
@@ -56,9 +56,5 @@ public class Post {
 
     public String getDirectoryUrl() {
         return MAIN_POSTS_DIRECTORY_URL + "/" + this.id;
-    }
-
-    public void addReaction(Reaction reaction) {
-        this.reactions.add(reaction);
     }
 }

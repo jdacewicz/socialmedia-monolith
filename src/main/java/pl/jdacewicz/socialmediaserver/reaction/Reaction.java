@@ -45,4 +45,12 @@ public class Reaction {
     public String getDirectoryUrl() {
         return MAIN_REACTIONS_DIRECTORY_URL + "/" + this.id;
     }
+
+    public void addPost(Post post) {
+        this.posts.add(post);
+    }
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+    }
 }

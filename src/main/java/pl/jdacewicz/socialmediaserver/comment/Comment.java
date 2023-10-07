@@ -42,7 +42,7 @@ public class Comment {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<Reaction> reactions = new LinkedList<>();
 
     public Comment(String content, String imageName, User creator, Post post) {
@@ -58,5 +58,9 @@ public class Comment {
 
     public String getDirectoryUrl() {
         return creator.getDirectoryUrl() + "/" + MAIN_COMMENTS_DIRECTORY_URL + "/" + this.id;
+    }
+
+    public void addReaction(Reaction reaction) {
+        this.reactions.add(reaction);
     }
 }

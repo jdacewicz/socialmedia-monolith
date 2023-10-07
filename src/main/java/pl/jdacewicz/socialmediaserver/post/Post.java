@@ -41,7 +41,7 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new LinkedList<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<Reaction> reactions = new LinkedList<>();
 
     public Post(String content, String imageName, User creator) {
@@ -56,5 +56,9 @@ public class Post {
 
     public String getDirectoryUrl() {
         return MAIN_POSTS_DIRECTORY_URL + "/" + this.id;
+    }
+
+    public void addReaction(Reaction reaction) {
+        this.reactions.add(reaction);
     }
 }

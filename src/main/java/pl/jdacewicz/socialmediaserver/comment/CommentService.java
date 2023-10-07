@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import pl.jdacewicz.socialmediaserver.reaction.Reaction;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,6 +53,14 @@ class CommentService implements CommentFacade {
     @Transactional
     public void changeCommentVisibilityById(long id, boolean visible) {
         commentRepository.setVisibleById(id, visible);
+    }
+
+    @Override
+    public Comment reactToComment(long commentId, Reaction reaction) {
+        var comment = getCommentById(commentId);
+        comment.addReaction(reaction);
+        reaction.addComment(comment);
+        return commentRepository.save(comment);
     }
 
     @Override

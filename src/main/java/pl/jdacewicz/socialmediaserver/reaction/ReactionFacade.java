@@ -1,8 +1,6 @@
 package pl.jdacewicz.socialmediaserver.reaction;
 
 import org.springframework.web.multipart.MultipartFile;
-import pl.jdacewicz.socialmediaserver.comment.Comment;
-import pl.jdacewicz.socialmediaserver.post.Post;
 
 import java.io.IOException;
 
@@ -11,10 +9,6 @@ public interface ReactionFacade {
     Reaction getReactionById(int id);
 
     Reaction createReaction(Reaction reaction, MultipartFile image) throws IOException;
-
-    void reactToPost(int reactionId, Post post);
-
-    void reactToComment(int reactionId, Comment comment);
 
     void updateReaction(int id, String name, MultipartFile image) throws IOException;
 

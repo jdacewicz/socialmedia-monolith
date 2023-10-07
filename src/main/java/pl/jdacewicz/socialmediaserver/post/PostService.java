@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import pl.jdacewicz.socialmediaserver.reaction.Reaction;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,6 +47,14 @@ class PostService implements PostFacade {
     @Transactional
     public void changePostVisibility(long id, boolean visible) {
         postRepository.setVisibleById(id, visible);
+    }
+
+    @Override
+    public Post reactToPost(long postId, Reaction reaction) {
+        var post = getPostById(postId);
+        post.addReaction(reaction);
+        reaction.addPost(post);
+        return postRepository.save(post);
     }
 
     @Override

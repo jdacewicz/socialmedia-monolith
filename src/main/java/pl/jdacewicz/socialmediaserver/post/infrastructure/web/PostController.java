@@ -9,6 +9,7 @@ import pl.jdacewicz.socialmediaserver.post.PostFacade;
 import pl.jdacewicz.socialmediaserver.post.PostMapper;
 import pl.jdacewicz.socialmediaserver.post.dto.PostDto;
 import pl.jdacewicz.socialmediaserver.post.dto.PostRequest;
+import pl.jdacewicz.socialmediaserver.reaction.ReactionFacade;
 import pl.jdacewicz.socialmediaserver.user.UserFacade;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ public class PostController {
 
     private final PostFacade postFacade;
     private final UserFacade userFacade;
+    private final ReactionFacade reactionFacade;
     private final PostMapper postMapper;
 
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -52,6 +54,15 @@ public class PostController {
     public void changePostVisibility(@PathVariable long id,
                                      @RequestParam boolean visible) {
         postFacade.changePostVisibility(id, visible);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PutMapping("/{postId}/react/{reactionId}")
+    public PostDto reactToPost(@PathVariable long postId,
+                            @PathVariable int reactionId) {
+        var reaction = reactionFacade.getReactionById(reactionId);
+        var reactedPost = postFacade.reactToPost(postId, reaction);
+        return postMapper.mapToDto(reactedPost);
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")

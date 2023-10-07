@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import pl.jdacewicz.socialmediaserver.comment.Comment;
-import pl.jdacewicz.socialmediaserver.post.Post;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,23 +31,6 @@ class ReactionService implements ReactionFacade{
         var directory = new File(createdReaction.getImageUrl());
         FileUtils.copyInputStreamToFile(image.getInputStream(), directory);
         return createdReaction;
-    }
-
-    @Override
-    public void reactToPost(int reactionId, Post post) {
-        var reaction = getReactionById(reactionId);
-        reaction.getPosts()
-                .add(post);
-        reactionRepository.save(reaction);
-
-    }
-
-    @Override
-    public void reactToComment(int reactionId, Comment comment) {
-        var reaction = getReactionById(reactionId);
-        reaction.getComments()
-                .add(comment);
-        reactionRepository.save(reaction);
     }
 
     @Override

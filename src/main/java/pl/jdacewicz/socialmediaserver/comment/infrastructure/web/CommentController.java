@@ -9,6 +9,7 @@ import pl.jdacewicz.socialmediaserver.comment.CommentFacade;
 import pl.jdacewicz.socialmediaserver.comment.CommentMapper;
 import pl.jdacewicz.socialmediaserver.comment.dto.CommentDto;
 import pl.jdacewicz.socialmediaserver.post.PostFacade;
+import pl.jdacewicz.socialmediaserver.reaction.ReactionFacade;
 import pl.jdacewicz.socialmediaserver.user.UserFacade;
 
 import java.io.IOException;
@@ -22,6 +23,7 @@ public class CommentController {
     private final CommentFacade commentFacade;
     private final PostFacade postFacade;
     private final UserFacade userFacade;
+    private final ReactionFacade reactionFacade;
     private final CommentMapper commentMapper;
 
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -55,6 +57,15 @@ public class CommentController {
     public void changeCommentVisibility(@PathVariable long id,
                                         @RequestParam boolean visible) {
         commentFacade.changeCommentVisibilityById(id, visible);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PutMapping("/{commentId}/react/{reactionId}")
+    public CommentDto reactToComment(@PathVariable long commentId,
+                               @PathVariable int reactionId) {
+        var reaction = reactionFacade.getReactionById(reactionId);
+        var reactedComment = commentFacade.reactToComment(commentId, reaction);
+        return commentMapper.mapToDto(reactedComment);
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")

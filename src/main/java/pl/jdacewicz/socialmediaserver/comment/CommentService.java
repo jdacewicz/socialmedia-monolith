@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import pl.jdacewicz.socialmediaserver.reaction.Reaction;
+import pl.jdacewicz.socialmediaserver.reaction.ReactionUser;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,10 +56,10 @@ class CommentService implements CommentFacade {
     }
 
     @Override
-    public Comment reactToComment(long commentId, Reaction reaction) {
+    public Comment reactToComment(long commentId, ReactionUser reactionUser) {
         var comment = getCommentById(commentId);
-        comment.addReaction(reaction);
-        reaction.addComment(comment);
+        reactionUser.getComments().add(comment);
+        comment.getReactionUsers().add(reactionUser);
         return commentRepository.save(comment);
     }
 

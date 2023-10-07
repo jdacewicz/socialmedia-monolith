@@ -10,6 +10,7 @@ import pl.jdacewicz.socialmediaserver.post.PostMapper;
 import pl.jdacewicz.socialmediaserver.post.dto.PostDto;
 import pl.jdacewicz.socialmediaserver.post.dto.PostRequest;
 import pl.jdacewicz.socialmediaserver.reaction.ReactionFacade;
+import pl.jdacewicz.socialmediaserver.reaction.ReactionUser;
 import pl.jdacewicz.socialmediaserver.user.UserFacade;
 
 import java.io.IOException;
@@ -60,8 +61,9 @@ public class PostController {
     @PutMapping("/{postId}/react/{reactionId}")
     public PostDto reactToPost(@PathVariable long postId,
                             @PathVariable int reactionId) {
+        var loggedUser = userFacade.getLoggedUser();
         var reaction = reactionFacade.getReactionById(reactionId);
-        var reactedPost = postFacade.reactToPost(postId, reaction);
+        var reactedPost = postFacade.reactToPost(postId, new ReactionUser(reaction, loggedUser));
         return postMapper.mapToDto(reactedPost);
     }
 

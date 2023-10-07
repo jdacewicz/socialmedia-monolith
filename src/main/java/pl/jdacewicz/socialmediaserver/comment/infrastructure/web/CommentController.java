@@ -10,6 +10,7 @@ import pl.jdacewicz.socialmediaserver.comment.CommentMapper;
 import pl.jdacewicz.socialmediaserver.comment.dto.CommentDto;
 import pl.jdacewicz.socialmediaserver.post.PostFacade;
 import pl.jdacewicz.socialmediaserver.reaction.ReactionFacade;
+import pl.jdacewicz.socialmediaserver.reaction.ReactionUser;
 import pl.jdacewicz.socialmediaserver.user.UserFacade;
 
 import java.io.IOException;
@@ -63,8 +64,9 @@ public class CommentController {
     @PutMapping("/{commentId}/react/{reactionId}")
     public CommentDto reactToComment(@PathVariable long commentId,
                                @PathVariable int reactionId) {
+        var loggedUser = userFacade.getLoggedUser();
         var reaction = reactionFacade.getReactionById(reactionId);
-        var reactedComment = commentFacade.reactToComment(commentId, reaction);
+        var reactedComment = commentFacade.reactToComment(commentId, new ReactionUser(reaction, loggedUser));
         return commentMapper.mapToDto(reactedComment);
     }
 

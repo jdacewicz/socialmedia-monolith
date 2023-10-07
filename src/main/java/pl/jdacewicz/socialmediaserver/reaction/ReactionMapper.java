@@ -14,9 +14,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ReactionMapper {
 
-    public List<ReactionCounter> mapToCounter(List<Reaction> reactions) {
+    public List<ReactionCounter> mapToCounter(List<ReactionUser> reactionUsers) {
         List<ReactionCounter> reactionCounters = new ArrayList<>();
-        countOccurrences(reactions)
+        countOccurrences(reactionUsers)
                 .forEach((key, value) -> reactionCounters.add(mapToCounter(key, value)));
         return reactionCounters;
     }
@@ -31,9 +31,10 @@ public class ReactionMapper {
                 reaction.getImageUrl());
     }
 
-    private Map<Reaction, Integer> countOccurrences(List<Reaction> reactions) {
+    private Map<Reaction, Integer> countOccurrences(List<ReactionUser> reactionUsers) {
         Map<Reaction, Integer> counter = new HashMap<>();
-        for (Reaction reaction : reactions) {
+        for (ReactionUser reactionUser : reactionUsers) {
+            var reaction = reactionUser.getReaction();
             if (counter.containsKey(reaction)) {
                 counter.put(reaction, counter.get(reaction) + 1);
             } else {

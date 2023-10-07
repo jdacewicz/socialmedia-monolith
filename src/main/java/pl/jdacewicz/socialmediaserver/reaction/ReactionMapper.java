@@ -2,6 +2,7 @@ package pl.jdacewicz.socialmediaserver.reaction;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import pl.jdacewicz.socialmediaserver.reaction.dto.ReactionCounter;
 import pl.jdacewicz.socialmediaserver.reaction.dto.ReactionDto;
 
 import java.util.ArrayList;
@@ -13,18 +14,21 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ReactionMapper {
 
-    public List<ReactionDto> mapToDto(List<Reaction> reactions) {
-        List<ReactionDto> reactionsDto = new ArrayList<>();
+    public List<ReactionCounter> mapToCounter(List<Reaction> reactions) {
+        List<ReactionCounter> reactionCounters = new ArrayList<>();
         countOccurrences(reactions)
-                .forEach((key, value) -> reactionsDto.add(mapToDto(key, value)));
-        return reactionsDto;
+                .forEach((key, value) -> reactionCounters.add(mapToCounter(key, value)));
+        return reactionCounters;
     }
 
-    public ReactionDto mapToDto(Reaction reaction, int count) {
+    public ReactionCounter mapToCounter(Reaction reaction, int count) {
+        return new ReactionCounter(mapToDto(reaction), count);
+    }
+
+    public ReactionDto mapToDto(Reaction reaction) {
         return new ReactionDto(reaction.getId(),
                 reaction.getName(),
-                reaction.getImageUrl(),
-                count);
+                reaction.getImageUrl());
     }
 
     private Map<Reaction, Integer> countOccurrences(List<Reaction> reactions) {

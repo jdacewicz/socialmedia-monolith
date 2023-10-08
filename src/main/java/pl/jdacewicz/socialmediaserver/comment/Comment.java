@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.jdacewicz.socialmediaserver.Image;
 import pl.jdacewicz.socialmediaserver.post.Post;
 import pl.jdacewicz.socialmediaserver.reaction.ReactionUser;
 import pl.jdacewicz.socialmediaserver.user.User;
@@ -18,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter(value = AccessLevel.PACKAGE)
-public class Comment {
+public class Comment implements Image {
 
     final static String MAIN_COMMENTS_DIRECTORY_URL = "comments";
 
@@ -52,11 +53,21 @@ public class Comment {
         this.post = post;
     }
 
+    @Override
     public String getImageUrl() {
         return getDirectoryUrl() + "/" + this.imageName;
     }
 
+    @Override
     public String getDirectoryUrl() {
         return creator.getDirectoryUrl() + "/" + MAIN_COMMENTS_DIRECTORY_URL + "/" + this.id;
+    }
+
+    public void addReactionUser(ReactionUser reactionUser) {
+        if (reactionUser.isUserUnique(getReactionUsers())) {
+            throw new UnsupportedOperationException();
+        }
+        this.reactionUsers.add(reactionUser);
+        reactionUser.getComments().add(this);
     }
 }

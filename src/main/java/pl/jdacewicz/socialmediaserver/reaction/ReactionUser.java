@@ -41,4 +41,10 @@ public class ReactionUser {
         this.reaction = reaction;
         this.user = user;
     }
+
+    public boolean isUserUnique(List<ReactionUser> reactionUsers) {
+        return reactionUsers.stream()
+                .anyMatch(r -> r.getUser()
+                        .equals(this.user));
+    }
 }

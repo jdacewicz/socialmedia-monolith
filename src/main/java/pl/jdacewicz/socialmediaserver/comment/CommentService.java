@@ -58,8 +58,7 @@ class CommentService implements CommentFacade {
     @Override
     public Comment reactToComment(long commentId, ReactionUser reactionUser) {
         var comment = getCommentById(commentId);
-        reactionUser.getComments().add(comment);
-        comment.getReactionUsers().add(reactionUser);
+        comment.addReactionUser(reactionUser);
         return commentRepository.save(comment);
     }
 

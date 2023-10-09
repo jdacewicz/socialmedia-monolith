@@ -6,6 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import pl.jdacewicz.socialmediaserver.user.dto.UserDto;
 
 import java.util.Optional;
 
@@ -17,25 +18,29 @@ class UserServiceImpl implements UserFacade {
     private String notFoundUserMessage;
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Override
-    public User getLoggedUser() {
+    public UserDto getLoggedUser() {
         var user = Optional
                 .ofNullable((User) SecurityContextHolder
                 .getContext()
                 .getAuthentication()
                 .getPrincipal());
-        return user.orElseThrow(() -> new UserNotSignedInException(""));
+        return user.map(userMapper::mapToDto)
+                .orElseThrow(() -> new UserNotSignedInException(""));
     }
 
     @Override
-    public User createUser(User user) {
-        return userRepository.save(user);
+    public UserDto createUser(User user) {
+        var createdUser = userRepository.save(user);
+        return userMapper.mapToDto(createdUser);
     }
 
     @Override
-    public User findUserByEmail(String email) {
+    public UserDto findUserByEmail(String email) {
         return userRepository.findByEmail(email)
+                .map(userMapper::mapToDto)
                 .orElseThrow(() -> new UsernameNotFoundException(notFoundUserMessage));
     }
 

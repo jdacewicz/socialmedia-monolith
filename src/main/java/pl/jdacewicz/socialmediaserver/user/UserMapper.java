@@ -5,4 +5,6 @@ import pl.jdacewicz.socialmediaserver.user.dto.UserDto;
 public interface UserMapper {
 
     UserDto mapToDto(User user);
+
+    User mapToEntity(UserDto userDto);
 }

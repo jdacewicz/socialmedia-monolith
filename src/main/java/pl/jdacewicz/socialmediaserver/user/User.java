@@ -55,6 +55,13 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<ReactionUser> reactionUsers;
 
+    public User(long id, String email, String firstname, String lastname) {
+        this.id = id;
+        this.email = email;
+        this.firstname = firstname;
+        this.lastname = lastname;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -1,12 +1,14 @@
 package pl.jdacewicz.socialmediaserver.user;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
+import pl.jdacewicz.socialmediaserver.authentication.dto.RegisterRequest;
+import pl.jdacewicz.socialmediaserver.user.dto.UserDto;
 
 public interface UserFacade extends UserDetailsService {
 
-    User getLoggedUser();
+    UserDto getLoggedUser();
 
-    User createUser(User user);
+    UserDto createUser(User user);
 
-    User findUserByEmail(String email);
+    UserDto findUserByEmail(String email);
 }

@@ -66,7 +66,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private boolean isTokenValidAndActive(String jwtToken, UserDetails userDetails) {
         var isTokenActive = this.tokenFacade
                 .getTokenByCode(jwtToken)
-                .isTokenActive();
+                .isActive();
         return ((jwtService.isTokenValid(jwtToken, userDetails)) && isTokenActive);
     }
 

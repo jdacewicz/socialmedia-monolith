@@ -8,20 +8,20 @@ import org.springframework.stereotype.Service;
 import pl.jdacewicz.socialmediaserver.authentication.dto.AuthenticationRequest;
 import pl.jdacewicz.socialmediaserver.authentication.dto.AuthenticationResponse;
 import pl.jdacewicz.socialmediaserver.authentication.dto.RegisterRequest;
-import pl.jdacewicz.socialmediaserver.token.Token;
 import pl.jdacewicz.socialmediaserver.token.TokenFacade;
 import pl.jdacewicz.socialmediaserver.user.User;
 import pl.jdacewicz.socialmediaserver.user.UserFacade;
+import pl.jdacewicz.socialmediaserver.user.dto.UserDto;
 
 @Service
 @RequiredArgsConstructor
 class AuthenticationService implements AuthenticationFacade {
 
+    private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
     private final UserFacade userFacade;
     private final TokenFacade tokenFacade;
     private final JwtService jwtService;
-    private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
 
     @Override
     public AuthenticationResponse register(RegisterRequest request) {
@@ -35,9 +35,16 @@ class AuthenticationService implements AuthenticationFacade {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                         request.email(),
                         request.password()));
-        var user = userFacade.findUserByEmail(request.email());
-        tokenFacade.revokeAllUserTokens(user.getId());
-        return createAuthenticationResponse(user);
+        var userDto = userFacade.findUserByEmail(request.email());
+        tokenFacade.revokeAllUserTokens(userDto.id());
+        return createAuthenticationResponse(userDto);
+    }
+
+    private AuthenticationResponse createAuthenticationResponse(UserDto userDto) {
+        var jwtToken = jwtService.generateToken(userDto);
+        var refreshToken = jwtService.generateRefreshToken(userDto);
+        tokenFacade.saveToken(jwtToken, userDto);
+        return new AuthenticationResponse(jwtToken, refreshToken);
     }
 
     private User mapToUser(RegisterRequest request) {
@@ -47,12 +54,5 @@ class AuthenticationService implements AuthenticationFacade {
                 .firstname(request.firstname())
                 .lastname(request.lastname())
                 .build();
-    }
-
-    private AuthenticationResponse createAuthenticationResponse(User user) {
-        var jwtToken = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
-        tokenFacade.saveToken(new Token(jwtToken, user));
-        return new AuthenticationResponse(jwtToken, refreshToken);
     }
 }

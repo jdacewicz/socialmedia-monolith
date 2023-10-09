@@ -2,6 +2,7 @@ package pl.jdacewicz.socialmediaserver.reaction;
 
 import pl.jdacewicz.socialmediaserver.reaction.dto.ReactionCounter;
 import pl.jdacewicz.socialmediaserver.reaction.dto.ReactionDto;
+import pl.jdacewicz.socialmediaserver.user.dto.UserDto;
 
 import java.util.List;
 
@@ -13,4 +14,6 @@ public interface ReactionMapper {
     ReactionCounter mapToCounter(Reaction reaction, int count);
 
     ReactionDto mapToDto(Reaction reaction);
+
+    ReactionUser mapToReactionUser(ReactionDto reactionDto, UserDto userDto);
 }

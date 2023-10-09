@@ -1,6 +1,7 @@
 package pl.jdacewicz.socialmediaserver.reaction.dto;
 
-public record ReactionDto(long id,
+public record ReactionDto(int id,
                           String name,
-                          String imageUrl) {
+                          String imageUrl,
+                          String directoryUrl) {
 }

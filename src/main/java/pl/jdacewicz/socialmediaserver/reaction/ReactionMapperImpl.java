@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.jdacewicz.socialmediaserver.reaction.dto.ReactionCounter;
 import pl.jdacewicz.socialmediaserver.reaction.dto.ReactionDto;
+import pl.jdacewicz.socialmediaserver.user.UserMapper;
+import pl.jdacewicz.socialmediaserver.user.dto.UserDto;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,6 +15,8 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class ReactionMapperImpl implements ReactionMapper {
+
+    private final UserMapper userMapper;
 
     @Override
     public List<ReactionCounter> mapToCounter(List<ReactionUser> reactionUsers) {
@@ -31,7 +35,14 @@ public class ReactionMapperImpl implements ReactionMapper {
     public ReactionDto mapToDto(Reaction reaction) {
         return new ReactionDto(reaction.getId(),
                 reaction.getName(),
-                reaction.getImageUrl());
+                reaction.getImageUrl(),
+                reaction.getDirectoryUrl());
+    }
+
+    @Override
+    public ReactionUser mapToReactionUser(ReactionDto reactionDto, UserDto userDto) {
+        return new ReactionUser(mapToEntity(reactionDto),
+                userMapper.mapToEntity(userDto));
     }
 
     private Map<Reaction, Integer> countOccurrences(List<ReactionUser> reactionUsers) {
@@ -45,5 +56,10 @@ public class ReactionMapperImpl implements ReactionMapper {
             }
         }
         return counter;
+    }
+
+    private Reaction mapToEntity(ReactionDto reactionDto) {
+        return new Reaction(reactionDto.id(),
+                reactionDto.name());
     }
 }

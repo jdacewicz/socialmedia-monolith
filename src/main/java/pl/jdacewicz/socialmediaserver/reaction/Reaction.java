@@ -28,6 +28,11 @@ public class Reaction {
     @OneToMany(mappedBy = "reaction")
     private List<ReactionUser> reactionUsers;
 
+    public Reaction(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Reaction(String name, String imageName) {
         this.name = name;
         this.imageName = imageName;

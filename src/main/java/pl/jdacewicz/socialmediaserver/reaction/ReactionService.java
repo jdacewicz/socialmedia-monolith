@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import pl.jdacewicz.socialmediaserver.reaction.dto.ReactionDto;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,36 +19,46 @@ class ReactionService implements ReactionFacade{
     private String notFoundReactionMessage;
 
     private final ReactionRepository reactionRepository;
+    private final ReactionMapper reactionMapper;
 
     @Override
-    public Reaction getReactionById(int id) {
+    public ReactionDto getReactionById(int id) {
         return reactionRepository.findById(id)
+                .map(reactionMapper::mapToDto)
                 .orElseThrow(() -> new ReactionNotFoundException(notFoundReactionMessage));
     }
 
     @Override
-    public Reaction createReaction(Reaction reaction, MultipartFile image) throws IOException {
+    public ReactionDto createReaction(String name, MultipartFile image) throws IOException {
+        var reaction = new Reaction(name, image.getOriginalFilename());
         var createdReaction = reactionRepository.save(reaction);
-        var directory = new File(createdReaction.getImageUrl());
-        FileUtils.copyInputStreamToFile(image.getInputStream(), directory);
-        return createdReaction;
+        uploadImage(createdReaction.getImageUrl(), image);
+        return reactionMapper.mapToDto(createdReaction);
     }
 
     @Override
     @Transactional
     public void updateReaction(int id, String name, MultipartFile image) throws IOException {
         var reaction = getReactionById(id);
-        var directory = new File(reaction.getImageUrl());
-        FileUtils.copyInputStreamToFile(image.getInputStream(), directory);
+        uploadImage(reaction.imageUrl(), image);
         reactionRepository.setReactionNameAndImageNameById(id, name,
                 image.getOriginalFilename());
     }
 
     @Override
     public void deleteReaction(int id) throws IOException {
-        var directory = new File(getReactionById(id)
-                .getDirectoryUrl());
-        FileUtils.deleteDirectory(directory);
+        var reaction = getReactionById(id);
+        deleteDirectory(reaction.directoryUrl());
         reactionRepository.deleteById(id);
+    }
+
+    private void uploadImage(String imageUrl, MultipartFile image) throws IOException {
+        var directory = new File(imageUrl);
+        FileUtils.copyInputStreamToFile(image.getInputStream(), directory);
+    }
+
+    private void deleteDirectory(String directoryUrl) throws IOException {
+        var directory = new File(directoryUrl);
+        FileUtils.deleteDirectory(directory);
     }
 }

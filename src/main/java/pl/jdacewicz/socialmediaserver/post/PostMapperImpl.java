@@ -1,6 +1,7 @@
 package pl.jdacewicz.socialmediaserver.post;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import pl.jdacewicz.socialmediaserver.comment.CommentMapper;
@@ -24,15 +25,24 @@ class PostMapperImpl implements PostMapper {
                 post.getCreationDateTime(),
                 post.getContent(),
                 post.getImageUrl(),
+                post.getDirectoryUrl(),
                 userMapper.mapToDto(post.getCreator()),
                 commentMapper.mapToDto(post.getComments()),
                 reactionMapper.mapToCounter(post.getReactionUsers()));
     }
 
     @Override
-    public Post mapToPost(PostRequest request, MultipartFile image, User loggedUser) {
+    public Post mapToEntity(PostRequest request, MultipartFile image, User loggedUser) {
         return new Post(request.content(),
                 image.getOriginalFilename(),
                 loggedUser);
+    }
+
+    @Override
+    public Post mapToEntity(PostDto postDto) {
+        return new Post(postDto.id(),
+                postDto.creationDateTime(),
+                postDto.content(),
+                userMapper.mapToEntity(postDto.creator()));
     }
 }

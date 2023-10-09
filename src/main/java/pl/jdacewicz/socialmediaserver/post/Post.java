@@ -51,6 +51,13 @@ public class Post implements Image {
         this.creator = creator;
     }
 
+    public Post(long id, LocalDateTime creationDateTime, String content, User creator) {
+        this.id = id;
+        this.creationDateTime = creationDateTime;
+        this.content = content;
+        this.creator = creator;
+    }
+
     @Override
     public String getImageUrl() {
         return getDirectoryUrl() + "/" + this.imageName;

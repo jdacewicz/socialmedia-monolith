@@ -10,5 +10,7 @@ public interface PostMapper {
 
     PostDto mapToDto(Post post);
 
-    Post mapToPost(PostRequest request, MultipartFile image, User loggedUser);
+    Post mapToEntity(PostRequest request, MultipartFile image, User loggedUser);
+
+    Post mapToEntity(PostDto postDto);
 }

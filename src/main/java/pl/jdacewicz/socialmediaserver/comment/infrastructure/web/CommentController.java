@@ -6,12 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.jdacewicz.socialmediaserver.comment.CommentFacade;
-import pl.jdacewicz.socialmediaserver.comment.CommentMapper;
 import pl.jdacewicz.socialmediaserver.comment.dto.CommentDto;
-import pl.jdacewicz.socialmediaserver.post.PostFacade;
-import pl.jdacewicz.socialmediaserver.reaction.ReactionFacade;
-import pl.jdacewicz.socialmediaserver.reaction.ReactionUser;
-import pl.jdacewicz.socialmediaserver.user.UserFacade;
 
 import java.io.IOException;
 
@@ -22,23 +17,17 @@ import java.io.IOException;
 public class CommentController {
 
     private final CommentFacade commentFacade;
-    private final PostFacade postFacade;
-    private final UserFacade userFacade;
-    private final ReactionFacade reactionFacade;
-    private final CommentMapper commentMapper;
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/{id}")
     public CommentDto getVisibleCommentById(@PathVariable long id) {
-        var comment = commentFacade.getVisibleCommentById(id);
-        return commentMapper.mapToDto(comment);
+        return commentFacade.getVisibleCommentById(id);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/peek/{id}")
     public CommentDto getCommentById(@PathVariable long id) {
-        var comment = commentFacade.getCommentById(id);
-        return commentMapper.mapToDto(comment);
+        return commentFacade.getCommentById(id);
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -46,11 +35,7 @@ public class CommentController {
     public CommentDto commentPost(@PathVariable long postId,
                                   @RequestPart String content,
                                   @RequestPart MultipartFile image) throws IOException {
-        var loggedUser = userFacade.getLoggedUser();
-        var post = postFacade.getPostById(postId);
-        var comment = commentMapper.mapToComment(content, image, loggedUser, post);
-        var createdComment = commentFacade.createComment(comment, image);
-        return commentMapper.mapToDto(createdComment);
+        return commentFacade.createComment(postId, content, image);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -63,11 +48,8 @@ public class CommentController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("/{commentId}/react/{reactionId}")
     public CommentDto reactToComment(@PathVariable long commentId,
-                               @PathVariable int reactionId) {
-        var loggedUser = userFacade.getLoggedUser();
-        var reaction = reactionFacade.getReactionById(reactionId);
-        var reactedComment = commentFacade.reactToComment(commentId, new ReactionUser(reaction, loggedUser));
-        return commentMapper.mapToDto(reactedComment);
+                                     @PathVariable int reactionId) {
+        return commentFacade.reactToComment(commentId, reactionId);
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")

@@ -10,6 +10,7 @@ public record CommentDto(long id,
                          LocalDateTime creationDateTime,
                          String content,
                          String imageUrl,
+                         String directoryUrl,
                          UserDto creator,
                          List<ReactionCounter> reactionCounters) {
 }

@@ -32,6 +32,7 @@ class CommentMapperImpl implements CommentMapper {
                 comment.getCreationDateTime(),
                 comment.getContent(),
                 comment.getImageUrl(),
+                comment.getDirectoryUrl(),
                 userMapper.mapToDto(comment.getCreator()),
                 reactionMapper.mapToCounter(comment.getReactionUsers()));
     }

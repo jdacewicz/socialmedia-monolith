@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import pl.jdacewicz.socialmediaserver.token.dto.TokenDto;
 
 @Component
-public class TokenMapperImpl implements TokenMapper {
+class TokenMapperImpl implements TokenMapper {
 
     @Override
     public TokenDto mapToDto(Token token) {

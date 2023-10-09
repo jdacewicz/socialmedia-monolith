@@ -14,7 +14,7 @@ import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
-public class ReactionMapperImpl implements ReactionMapper {
+class ReactionMapperImpl implements ReactionMapper {
 
     private final UserMapper userMapper;
 

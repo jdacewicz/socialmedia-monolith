@@ -47,7 +47,7 @@ public class PostController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("/{postId}/react/{reactionId}")
     public PostDto reactToPost(@PathVariable long postId,
-                            @PathVariable int reactionId) {
+                               @PathVariable int reactionId) {
         return postFacade.reactToPost(postId, reactionId);
     }
 

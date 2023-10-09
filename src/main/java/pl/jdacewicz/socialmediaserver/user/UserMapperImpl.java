@@ -1,14 +1,10 @@
 package pl.jdacewicz.socialmediaserver.user;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import pl.jdacewicz.socialmediaserver.authentication.dto.RegisterRequest;
 import pl.jdacewicz.socialmediaserver.user.dto.UserDto;
 
 @Component
-@RequiredArgsConstructor
-public class UserMapperImpl implements UserMapper {
+class UserMapperImpl implements UserMapper {
 
     @Override
     public UserDto mapToDto(User user) {
@@ -21,9 +17,11 @@ public class UserMapperImpl implements UserMapper {
 
     @Override
     public User mapToEntity(UserDto userDto) {
-        return new User(userDto.id(),
-                userDto.email(),
-                userDto.firstname(),
-                userDto.lastname());
+        return User.builder()
+                .id(userDto.id())
+                .email(userDto.email())
+                .firstname(userDto.firstname())
+                .lastname(userDto.lastname())
+                .build();
     }
 }

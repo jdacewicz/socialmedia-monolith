@@ -1,7 +1,6 @@
 package pl.jdacewicz.socialmediaserver.user;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
-import pl.jdacewicz.socialmediaserver.authentication.dto.RegisterRequest;
 import pl.jdacewicz.socialmediaserver.user.dto.UserDto;
 
 public interface UserFacade extends UserDetailsService {

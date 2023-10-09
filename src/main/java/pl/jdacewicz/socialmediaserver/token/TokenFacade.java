@@ -1,10 +1,13 @@
 package pl.jdacewicz.socialmediaserver.token;
 
+import pl.jdacewicz.socialmediaserver.token.dto.TokenDto;
+import pl.jdacewicz.socialmediaserver.user.dto.UserDto;
+
 public interface TokenFacade {
 
-    Token getTokenByCode(String code);
+    TokenDto getTokenByCode(String code);
 
     void revokeAllUserTokens(long id);
 
-    void saveToken(Token token);
+    void saveToken(String jwtToken, UserDto userDto);
 }

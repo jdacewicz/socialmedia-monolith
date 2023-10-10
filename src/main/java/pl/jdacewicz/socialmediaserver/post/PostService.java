@@ -1,19 +1,19 @@
 package pl.jdacewicz.socialmediaserver.post;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pl.jdacewicz.socialmediaserver.post.dto.PostDto;
-import pl.jdacewicz.socialmediaserver.reaction.ReactionFacade;
-import pl.jdacewicz.socialmediaserver.reaction.ReactionMapper;
+import pl.jdacewicz.socialmediaserver.reaction.ReactionUserFacade;
 import pl.jdacewicz.socialmediaserver.user.UserFacade;
 import pl.jdacewicz.socialmediaserver.user.UserMapper;
 
-import java.io.File;
 import java.io.IOException;
+
+import static pl.jdacewicz.socialmediaserver.utils.FileUtils.deleteDirectory;
+import static pl.jdacewicz.socialmediaserver.utils.FileUtils.uploadFile;
 
 @Service
 @RequiredArgsConstructor
@@ -26,17 +26,16 @@ class PostService implements PostFacade {
     private String notFoundVisiblePostMessage;
 
     private final PostRepository postRepository;
-    private final PostMapper postMapper;
+
     private final UserFacade userFacade;
+    private final ReactionUserFacade reactionUserFacade;
+
+    private final PostMapper postMapper;
     private final UserMapper userMapper;
-    private final ReactionFacade reactionFacade;
-    private final ReactionMapper reactionMapper;
 
     @Override
     public PostDto getPostById(long id) {
-        return postRepository.findById(id)
-                .map(postMapper::mapToDto)
-                .orElseThrow(() -> new PostNotFoundException(notFoundPostMessage));
+        return postMapper.mapToDto(getUnmappedPostById(id));
     }
 
     @Override
@@ -48,11 +47,9 @@ class PostService implements PostFacade {
 
     @Override
     public PostDto createPost(String content, MultipartFile image) throws IOException {
-        var loggedUser = userFacade.getLoggedUser();
-        var user = userMapper.mapToEntity(loggedUser);
-        var post = new Post(content, image.getOriginalFilename(), user);
+        var post = preparePost(content, image.getOriginalFilename());
         var createdPost = postRepository.save(post);
-        uploadImage(createdPost.getImageUrl(), image);
+        uploadFile(createdPost.getImageUrl(), image);
         return postMapper.mapToDto(createdPost);
     }
 
@@ -64,11 +61,8 @@ class PostService implements PostFacade {
 
     @Override
     public PostDto reactToPost(long postId, int reactionId) {
-        var loggedUser = userFacade.getLoggedUser();
-        var reaction = reactionFacade.getReactionById(reactionId);
-        var post = postRepository.findById(postId)
-                        .orElseThrow(() -> new PostNotFoundException(notFoundPostMessage));
-        var reactionUser = reactionMapper.mapToReactionUser(reaction, loggedUser);
+        var post = getUnmappedPostById(postId);
+        var reactionUser = reactionUserFacade.createReactionUser(reactionId);
         post.addReactionUser(reactionUser);
         var reactedPost = postRepository.save(post);
         return postMapper.mapToDto(reactedPost);
@@ -81,13 +75,14 @@ class PostService implements PostFacade {
         postRepository.deleteById(id);
     }
 
-    private void uploadImage(String imageUrl, MultipartFile image) throws IOException {
-        var directory = new File(imageUrl);
-        FileUtils.copyInputStreamToFile(image.getInputStream(), directory);
+    private Post getUnmappedPostById(long id) {
+        return postRepository.findById(id)
+                .orElseThrow(() -> new PostNotFoundException(notFoundPostMessage));
     }
 
-    private void deleteDirectory(String directoryUrl) throws IOException {
-        var directory = new File(directoryUrl);
-        FileUtils.deleteDirectory(directory);
+    private Post preparePost(String content, String imageUrl) {
+        var loggedUser = userFacade.getLoggedUser();
+        var user = userMapper.mapToEntity(loggedUser);
+        return new Post(content, imageUrl, user);
     }
 }

@@ -1,15 +1,16 @@
 package pl.jdacewicz.socialmediaserver.reaction;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pl.jdacewicz.socialmediaserver.reaction.dto.ReactionDto;
 
-import java.io.File;
 import java.io.IOException;
+
+import static pl.jdacewicz.socialmediaserver.utils.FileUtils.deleteDirectory;
+import static pl.jdacewicz.socialmediaserver.utils.FileUtils.uploadFile;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +33,7 @@ class ReactionService implements ReactionFacade{
     public ReactionDto createReaction(String name, MultipartFile image) throws IOException {
         var reaction = new Reaction(name, image.getOriginalFilename());
         var createdReaction = reactionRepository.save(reaction);
-        uploadImage(createdReaction.getImageUrl(), image);
+        uploadFile(createdReaction.getImageUrl(), image);
         return reactionMapper.mapToDto(createdReaction);
     }
 
@@ -40,7 +41,7 @@ class ReactionService implements ReactionFacade{
     @Transactional
     public void updateReaction(int id, String name, MultipartFile image) throws IOException {
         var reaction = getReactionById(id);
-        uploadImage(reaction.imageUrl(), image);
+        uploadFile(reaction.imageUrl(), image);
         reactionRepository.setReactionNameAndImageNameById(id, name,
                 image.getOriginalFilename());
     }
@@ -50,15 +51,5 @@ class ReactionService implements ReactionFacade{
         var reaction = getReactionById(id);
         deleteDirectory(reaction.directoryUrl());
         reactionRepository.deleteById(id);
-    }
-
-    private void uploadImage(String imageUrl, MultipartFile image) throws IOException {
-        var directory = new File(imageUrl);
-        FileUtils.copyInputStreamToFile(image.getInputStream(), directory);
-    }
-
-    private void deleteDirectory(String directoryUrl) throws IOException {
-        var directory = new File(directoryUrl);
-        FileUtils.deleteDirectory(directory);
     }
 }

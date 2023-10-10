@@ -12,7 +12,6 @@ import pl.jdacewicz.socialmediaserver.token.Token;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "t_users")
@@ -60,14 +59,6 @@ public class User implements UserDetails {
         this.email = email;
         this.firstname = firstname;
         this.lastname = lastname;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return id == user.id && Objects.equals(email, user.email);
     }
 
     public String getDirectoryUrl() {

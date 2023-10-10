@@ -1,7 +1,6 @@
 package pl.jdacewicz.socialmediaserver.comment;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,14 +8,15 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.jdacewicz.socialmediaserver.comment.dto.CommentDto;
 import pl.jdacewicz.socialmediaserver.post.PostFacade;
 import pl.jdacewicz.socialmediaserver.post.PostMapper;
-import pl.jdacewicz.socialmediaserver.reaction.ReactionFacade;
-import pl.jdacewicz.socialmediaserver.reaction.ReactionMapper;
+import pl.jdacewicz.socialmediaserver.reaction.ReactionUserFacade;
 import pl.jdacewicz.socialmediaserver.user.UserFacade;
 import pl.jdacewicz.socialmediaserver.user.UserMapper;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
+import static pl.jdacewicz.socialmediaserver.utils.FileUtils.deleteDirectory;
+import static pl.jdacewicz.socialmediaserver.utils.FileUtils.uploadFile;
 
 @Service
 @RequiredArgsConstructor
@@ -30,12 +30,11 @@ class CommentService implements CommentFacade {
 
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
-    private final ReactionMapper reactionMapper;
-    private final ReactionFacade reactionFacade;
     private final UserFacade userFacade;
     private final UserMapper userMapper;
     private final PostFacade postFacade;
     private final PostMapper postMapper;
+    private final ReactionUserFacade reactionUserFacade;
 
     @Override
     public CommentDto getCommentById(long id) {
@@ -59,13 +58,9 @@ class CommentService implements CommentFacade {
 
     @Override
     public CommentDto createComment(long postId, String content, MultipartFile image) throws IOException {
-        var loggedUser = userFacade.getLoggedUser();
-        var user = userMapper.mapToEntity(loggedUser);
-        var postDto = postFacade.getPostById(postId);
-        var post = postMapper.mapToEntity(postDto);
-        var comment = new Comment(content, image.getOriginalFilename(), user, post);
+        var comment = prepareComment(postId, content, image.getOriginalFilename());
         var createdComment = commentRepository.save(comment);
-        uploadImage(createdComment.getImageUrl(), image);
+        uploadFile(createdComment.getImageUrl(), image);
         return commentMapper.mapToDto(createdComment);
     }
 
@@ -77,11 +72,8 @@ class CommentService implements CommentFacade {
 
     @Override
     public CommentDto reactToComment(long commentId, int reactionId) {
-        var loggedUser = userFacade.getLoggedUser();
-        var reaction = reactionFacade.getReactionById(reactionId);
-        var comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CommentNotFoundException(notFoundCommentMessage));
-        var reactionUser = reactionMapper.mapToReactionUser(reaction, loggedUser);
+        var comment = getUnmappedCommentById(commentId);
+        var reactionUser = reactionUserFacade.createReactionUser(reactionId);
         comment.addReactionUser(reactionUser);
         var reactedComment = commentRepository.save(comment);
         return commentMapper.mapToDto(reactedComment);
@@ -94,13 +86,16 @@ class CommentService implements CommentFacade {
         commentRepository.deleteById(id);
     }
 
-    private void uploadImage(String imageUrl, MultipartFile image) throws IOException {
-        var directory = new File(imageUrl);
-        FileUtils.copyInputStreamToFile(image.getInputStream(), directory);
+    private Comment getUnmappedCommentById(long id) {
+        return commentRepository.findById(id)
+                .orElseThrow(() -> new CommentNotFoundException(notFoundCommentMessage));
     }
 
-    private void deleteDirectory(String directoryUrl) throws IOException {
-        var directory = new File(directoryUrl);
-        FileUtils.deleteDirectory(directory);
+    private Comment prepareComment(long postId, String content, String imageUrl) {
+        var loggedUser = userFacade.getLoggedUser();
+        var user = userMapper.mapToEntity(loggedUser);
+        var postDto = postFacade.getPostById(postId);
+        var post = postMapper.mapToEntity(postDto);
+        return new Comment(content, imageUrl, user, post);
     }
 }

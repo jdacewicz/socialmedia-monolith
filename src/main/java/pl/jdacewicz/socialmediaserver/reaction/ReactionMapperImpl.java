@@ -8,9 +8,9 @@ import pl.jdacewicz.socialmediaserver.user.UserMapper;
 import pl.jdacewicz.socialmediaserver.user.dto.UserDto;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import static pl.jdacewicz.socialmediaserver.reaction.ReactionUser.countOccurrences;
 
 @Component
 @RequiredArgsConstructor
@@ -43,19 +43,6 @@ class ReactionMapperImpl implements ReactionMapper {
     public ReactionUser mapToReactionUser(ReactionDto reactionDto, UserDto userDto) {
         return new ReactionUser(mapToEntity(reactionDto),
                 userMapper.mapToEntity(userDto));
-    }
-
-    private Map<Reaction, Integer> countOccurrences(List<ReactionUser> reactionUsers) {
-        Map<Reaction, Integer> counter = new HashMap<>();
-        for (ReactionUser reactionUser : reactionUsers) {
-            var reaction = reactionUser.getReaction();
-            if (counter.containsKey(reaction)) {
-                counter.put(reaction, counter.get(reaction) + 1);
-            } else {
-                counter.put(reaction, 1);
-            }
-        }
-        return counter;
     }
 
     private Reaction mapToEntity(ReactionDto reactionDto) {

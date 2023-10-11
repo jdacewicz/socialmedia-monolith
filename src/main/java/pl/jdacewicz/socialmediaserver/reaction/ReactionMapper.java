@@ -11,7 +11,7 @@ public interface ReactionMapper {
 
     List<ReactionCounter> mapToCounter(List<ReactionUser> reactionUsers);
 
-    ReactionCounter mapToCounter(Reaction reaction, int count);
+    ReactionCounter mapToCounter(Reaction reaction, long count);
 
     ReactionDto mapToDto(Reaction reaction);
 

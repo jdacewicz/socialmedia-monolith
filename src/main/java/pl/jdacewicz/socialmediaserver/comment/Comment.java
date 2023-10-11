@@ -64,7 +64,7 @@ public class Comment implements Image {
     }
 
     public void addReactionUser(ReactionUser reactionUser) {
-        if (reactionUser.isUserUnique(getReactionUsers())) {
+        if (reactionUser.isUserNotUnique(getReactionUsers())) {
             throw new UnsupportedOperationException();
         }
         this.reactionUsers.add(reactionUser);

@@ -27,7 +27,7 @@ class ReactionMapperImpl implements ReactionMapper {
     }
 
     @Override
-    public ReactionCounter mapToCounter(Reaction reaction, int count) {
+    public ReactionCounter mapToCounter(Reaction reaction, long count) {
         return new ReactionCounter(mapToDto(reaction), count);
     }
 

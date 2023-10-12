@@ -25,7 +25,7 @@ public class Reaction {
 
     private String imageName;
 
-    @OneToMany(mappedBy = "reaction")
+    @OneToMany(mappedBy = "reaction", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
     private List<ReactionUser> reactionUsers;
 
     public Reaction(int id, String name) {

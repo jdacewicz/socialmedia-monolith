@@ -54,4 +54,14 @@ public class ReactionUser {
         return reactionUsers.stream()
                 .collect(Collectors.groupingBy(ReactionUser::getReaction, Collectors.counting()));
     }
+
+    void removeRelationWithPosts() {
+        this.posts.forEach(post -> post.getReactionUsers()
+                .remove(this));
+    }
+
+    void removeRelationWithComments() {
+        this.comments.forEach(comment -> comment.getReactionUsers()
+                .remove(this));
+    }
 }

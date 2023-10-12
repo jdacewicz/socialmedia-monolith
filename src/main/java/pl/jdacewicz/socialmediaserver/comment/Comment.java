@@ -43,7 +43,7 @@ public class Comment implements Image {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
     private List<ReactionUser> reactionUsers = new LinkedList<>();
 
     public Comment(String content, String imageName, User creator, Post post) {

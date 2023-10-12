@@ -39,10 +39,10 @@ public class Post implements Image {
     @JoinColumn(name = "user_id")
     private User creator;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new LinkedList<>();
 
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
     private List<ReactionUser> reactionUsers = new LinkedList<>();
 
     public Post(String content, String imageName, User creator) {

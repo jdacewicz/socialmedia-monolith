@@ -1,5 +1,11 @@
 package pl.jdacewicz.socialmediaserver;
 
+import jakarta.validation.constraints.NotNull;
+
+import java.util.List;
+
 public record ApiError(int code,
-                       String message) {
+
+                       @NotNull
+                       List<String> messages) {
 }

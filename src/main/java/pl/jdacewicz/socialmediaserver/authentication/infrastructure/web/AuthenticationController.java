@@ -1,5 +1,6 @@
 package pl.jdacewicz.socialmediaserver.authentication.infrastructure.web;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,12 +19,12 @@ public class AuthenticationController {
     private final AuthenticationFacade authenticationFacade;
 
     @PostMapping("/register")
-    public AuthenticationResponse register(@RequestBody RegisterRequest request) {
+    public AuthenticationResponse register(@Valid @RequestBody RegisterRequest request) {
         return authenticationFacade.register(request);
     }
 
     @PostMapping("/authenticate")
-    public AuthenticationResponse authenticate(@RequestBody AuthenticationRequest request) {
+    public AuthenticationResponse authenticate(@Valid @RequestBody AuthenticationRequest request) {
         return authenticationFacade.authenticate(request);
     }
 }

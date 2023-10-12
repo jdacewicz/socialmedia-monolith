@@ -1,6 +1,9 @@
 package pl.jdacewicz.socialmediaserver.token;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,9 +22,12 @@ public class Token {
     private long id;
 
     @Column(unique = true)
+    @NotBlank
+    @Size(max = 180)
     private String code;
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     private TokenType tokenType = TokenType.BEARER;
 
     private boolean revoked = false;

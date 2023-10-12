@@ -1,6 +1,10 @@
 package pl.jdacewicz.socialmediaserver.user;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -29,16 +33,22 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
+    @NotBlank
+    @Email
+    @Size(min = 5, max = 32)
     private String email;
 
-    @Column(nullable = false)
+    @NotBlank
+    @Size(min = 8, max = 20)
     private String password;
 
-    @Column(nullable = false)
+    @NotBlank
+    @Size(min = 2, max = 16)
     private String firstname;
 
-    @Column(nullable = false)
+    @NotBlank
+    @Size(min = 2, max = 22)
     private String lastname;
 
     private String profilePictureName;

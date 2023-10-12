@@ -1,6 +1,9 @@
 package pl.jdacewicz.socialmediaserver.post;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,8 +30,11 @@ public class Post implements Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotNull
     private LocalDateTime creationDateTime = LocalDateTime.now();
 
+    @NotNull
+    @Size(max = 255)
     private String content;
 
     private String imageName;
@@ -37,6 +43,7 @@ public class Post implements Image {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @NotNull
     private User creator;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)

@@ -1,5 +1,9 @@
 package pl.jdacewicz.socialmediaserver.reaction.dto;
 
-public record ReactionCounter(ReactionDto reaction,
+import jakarta.validation.constraints.NotNull;
+
+public record ReactionCounter(@NotNull
+                              ReactionDto reaction,
+
                               long count) {
 }

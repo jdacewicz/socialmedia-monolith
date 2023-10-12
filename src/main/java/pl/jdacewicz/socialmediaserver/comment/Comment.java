@@ -1,6 +1,8 @@
 package pl.jdacewicz.socialmediaserver.comment;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,8 +29,11 @@ public class Comment implements Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotNull
     private LocalDateTime creationDateTime = LocalDateTime.now();
 
+    @NotNull
+    @Size(max = 255)
     private String content;
 
     private String imageName;
@@ -37,10 +42,12 @@ public class Comment implements Image {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @NotNull
     private User creator;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
+    @NotNull
     private Post post;
 
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})

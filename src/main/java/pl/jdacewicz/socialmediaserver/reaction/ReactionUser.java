@@ -1,6 +1,7 @@
 package pl.jdacewicz.socialmediaserver.reaction;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,10 +28,12 @@ public class ReactionUser {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reaction_id")
+    @NotNull
     private Reaction reaction;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @NotNull
     private User user;
 
     @ManyToMany(mappedBy = "reactionUsers")

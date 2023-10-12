@@ -17,4 +17,12 @@ class UserControllerAdvice {
         return ResponseEntity.status(status)
                 .body(error);
     }
+
+    @ExceptionHandler(UserNotSignedInException.class)
+    ResponseEntity<ApiError> handleUserNotSignedInException(UserNotSignedInException exception) {
+        var status = HttpStatus.NOT_FOUND;
+        var error = new ApiError(status.value(), exception.getMessage());
+        return ResponseEntity.status(status)
+                .body(error);
+    }
 }
